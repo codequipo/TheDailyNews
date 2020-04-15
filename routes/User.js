@@ -28,18 +28,18 @@ users.post('/register', (req, res) => {
               userData.password = hash
               User.create(userData)
                 .then(user => {
-                  res.json({ status: user.email + 'Registered!' })
+                  res.json({ status:"success",Data: user.email + 'Registered!' })
                 })
                 .catch(err => {
                   res.send('error: ' + err)
                 })
             })
           } else {
-            res.json({ error: 'User already exists' })
+            res.json({ status:"success",Data: 'User already exists' })
           }
         })
         .catch(err => {
-          res.send('error: ' + err)
+          res.json({ status:"success",Data: err })
         })
     })
 
@@ -65,14 +65,14 @@ users.post('/register', (req, res) => {
                 res.json({token:token})
               } else {
                 // Passwords don't match
-                res.json({ error: 'Password doesnt match' })
+                res.json({ status:"fail",error: 'Password doesnt match' })
               }
             } else {
-              res.json({ error: 'User does not exist' })
+              res.json({ status:"fail",error: 'User does not exist' })
             }
           })
           .catch(err => {
-            res.send('error: ' + err)
+            res.json({ status:"fail",error: err })
           })
       })
 

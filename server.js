@@ -38,9 +38,75 @@ var config = { headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'}
 }
+//Just called in beginning to not waste time
+console.log('start')
+    axios.post("http://0.0.0.0:8087/", 
+             { label : "Test" , language : "en"}  , config
+          )
+          .then(async function (response) {
+            // console.log(response.data.alldata);
+            // const sites=['http://cnn.com','http://www.time.com','http://www.bbc.co.uk']
+            const sites=response.data.allsite
+            const sites_key=response.data.allsite_key
+            for(var z=0;z<sites.length;z++){
 
-// setInterval(function() {
+                // var max_articles_by_one_source=2
+                var limit=response.data.alldata[sites[z]]['length']
+                // console.log("response.data.alldata[sites[z]]['length'] : "+limit)
+                // if(response.data.alldata[sites[z]]['length']>2){
+                //     limit=2
+                //     console.log("final limit  : "+limit)
+                // }
+                console.log("z:"+sites[z]+"  limit:"+limit)
+
+                
+
+                for(var i=limit-1;i>=0;i--){
+                    
+                     
+                    
+                    
+                    
+
+                    const documentCount = await Article.countDocuments({});
+                    console.log('documentCount:'+documentCount)   
+                    
+                    let article=new Article({
+                        
+                        main_url:sites[z],
+                        main_url_key:sites_key[z],
+                        url:response.data.alldata[sites[z]][i].url,
+                        
+                        title:response.data.alldata[sites[z]][i].title,
+                        text:response.data.alldata[sites[z]][i].text,
+                        top_image:response.data.alldata[sites[z]][i].top_image,
+                        index:i.toString(),
+                        unique_id:documentCount.toString(),
+
+                    })
+                    
+                    
+                    console.log("article.title:"+article.title)
+
+                    
+                    
+                    
+                    
+                    
+                    let resp=await article.save()
+                    
+                }
+                console.log()
+            }
+            
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+//end here extra
+setInterval(function() {
     console.log('start')
+    try{
     axios.post("http://0.0.0.0:8087/", 
              { label : "Test" , language : "en"}  , config
           )
@@ -61,6 +127,8 @@ var config = { headers: {
                 console.log("z:"+sites[z]+"  limit:"+limit)
                 for(var i=limit-1;i>=0;i--){
                     
+                    const documentCount = await Article.countDocuments({});
+                    console.log('documentCount:'+documentCount)
                     
                     let article=new Article({
                         main_url:sites[z],
@@ -90,7 +158,11 @@ var config = { headers: {
           .catch(function (error) {
             console.log(error);
           });
-// }, 120000)
+        }
+        catch(err){
+            console.log('error on server:'+err)
+        }
+}, 1200000)//20 mins
 
 
 

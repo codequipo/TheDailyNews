@@ -1,6 +1,8 @@
 const mongoose=require('mongoose')
 const Schema=mongoose.Schema
 
+const autoIncrement = require('mongoose-auto-increment');
+
 const ArticleSchema=new Schema({
     url:{
         type:String,
@@ -14,13 +16,17 @@ const ArticleSchema=new Schema({
         type:String,
         Default:'default_url_key'
     },
+    title:{
+        type:String,
+        Default:'default_title'
+    },
     index:{
         type:String,
         Default:'default_index'
     },
-    title:{
+    unique_id:{
         type:String,
-        Default:'default_title'
+        unique:true
     },
     text:{
         type:String,

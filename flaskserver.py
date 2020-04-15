@@ -42,7 +42,8 @@ print(key_name_all)
 def hello():
 	
 	print("li: ")
-	li=li_all[0:20]
+	li=li_all[0:10]
+	li2=key_name_all[0:10]
 	print(li)
 	print()
 	
@@ -67,6 +68,7 @@ def hello():
 				info=dict()
 				info['url']=article.url
 				info['title']=article.title
+				print('title:::::::::::::'+info['title'])
 				info['text']=summary
 				# info['summary']=article.summary
 				# info['keywords']=article.keywords
@@ -97,7 +99,7 @@ def hello():
 		'success':True,
 		'alldata':res_data,
 		'allsite':li,
-		'allsite_key':key_name_all
+		'allsite_key':li2
 	}
 	return json.dumps(result)
 

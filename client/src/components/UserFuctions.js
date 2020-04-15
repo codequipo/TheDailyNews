@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export const logUserOut = token =>{
   console.log('logUserOut called')
-    setTimeout(()=> localStorage.removeItem('usertoken'), 1000*60*60)
+    setTimeout(()=> localStorage.removeItem('usertoken'), 3600000)//1H
 }
 
 export const register = newUser => {
