@@ -1,6 +1,8 @@
  
 import axios from 'axios'
 
+const port=5005
+
 export const logUserOut = token =>{
   console.log('logUserOut called')
     setTimeout(()=> localStorage.removeItem('usertoken'), 3600000)//1H
@@ -8,7 +10,7 @@ export const logUserOut = token =>{
 
 export const register = newUser => {
     return axios
-      .post('http://localhost:5003/users/register', {
+      .post('http://localhost:'+port+'/users/register', {
         first_name: newUser.first_name,
         last_name: newUser.last_name,
         email: newUser.email,
@@ -21,7 +23,7 @@ export const register = newUser => {
 
 export const login = user => {
     return axios
-      .post('http://localhost:5003/users/login', {
+      .post('http://localhost:'+port+'/users/login', {
         email: user.email,
         password: user.password
       })
@@ -37,7 +39,7 @@ export const login = user => {
 
 export const getnewsbysources = data => {
   return axios
-    .post('http://localhost:5003/api/getnewsbysources', {
+    .post('http://localhost:'+port+'/api/getnewsbysources', {
       main_urls: data.main_urls,
       
     })
@@ -53,7 +55,7 @@ export const getnewsbysources = data => {
 
 export const addToBookmark = data => {
   return axios
-    .post('http://localhost:5003/api/addToBookmark', data,
+    .post('http://localhost:'+port+'/api/addToBookmark', data,
     {
       headers:{
         'authorization':'Bearer '+localStorage.usertoken,
@@ -71,7 +73,7 @@ export const addToBookmark = data => {
 
 export const getBookMarkedArticle = ()=> {
   return axios
-    .post('http://localhost:5003/api/getBookMarkedArticle', {},
+    .post('http://localhost:'+port+'/api/getBookMarkedArticle', {},
     {
       headers:{
         'authorization':'Bearer '+localStorage.usertoken,
@@ -88,7 +90,7 @@ export const getBookMarkedArticle = ()=> {
 }
 
 export const suscribe=async(data)=>{
-  const result=await axios.post('http://localhost:5003/api/suscribe',data,
+  const result=await axios.post('http://localhost:'+port+'/api/suscribe',data,
   {
     headers:{
       'authorization':'Bearer '+localStorage.usertoken,
@@ -100,7 +102,7 @@ export const suscribe=async(data)=>{
 }
 
 export const currentUser=async()=>{
-  const result=await axios.post('http://localhost:5003/api/currentUser',{},
+  const result=await axios.post('http://localhost:'+port+'/api/currentUser',{},
   {
     headers:{
       'authorization':'Bearer '+localStorage.usertoken,

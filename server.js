@@ -39,130 +39,142 @@ var config = { headers: {
     'Access-Control-Allow-Origin': '*'}
 }
 //Just called in beginning to not waste time
-console.log('start')
-    axios.post("http://0.0.0.0:8087/", 
-             { label : "Test" , language : "en"}  , config
-          )
-          .then(async function (response) {
-            // console.log(response.data.alldata);
-            // const sites=['http://cnn.com','http://www.time.com','http://www.bbc.co.uk']
-            const sites=response.data.allsite
-            const sites_key=response.data.allsite_key
-            for(var z=0;z<sites.length;z++){
+// console.log('start')
+//     axios.post("http://0.0.0.0:8087/", 
+//              { label : "Test" , language : "en"}  , config
+//           )
+//           .then(async function (response) {
+//             // console.log(response.data.alldata);
+//             // const sites=['http://cnn.com','http://www.time.com','http://www.bbc.co.uk']
+//             const sites=response.data.allsite
+//             const sites_key=response.data.allsite_key
+//             for(var z=0;z<sites.length;z++){
 
-                // var max_articles_by_one_source=2
-                var limit=response.data.alldata[sites[z]]['length']
-                // console.log("response.data.alldata[sites[z]]['length'] : "+limit)
-                // if(response.data.alldata[sites[z]]['length']>2){
-                //     limit=2
-                //     console.log("final limit  : "+limit)
-                // }
-                console.log("z:"+sites[z]+"  limit:"+limit)
+//                 // var max_articles_by_one_source=2
+//                 var limit=response.data.alldata[sites[z]]['length']
+//                 // console.log("response.data.alldata[sites[z]]['length'] : "+limit)
+//                 // if(response.data.alldata[sites[z]]['length']>2){
+//                 //     limit=2
+//                 //     console.log("final limit  : "+limit)
+//                 // }
+//                 console.log("z:"+sites[z]+"  limit:"+limit)
 
                 
 
-                for(var i=limit-1;i>=0;i--){
+//                 for(var i=limit-1;i>=0;i--){
                     
                      
                     
                     
                     
 
-                    const documentCount = await Article.countDocuments({});
-                    console.log('documentCount:'+documentCount)   
+//                     const documentCount = await Article.countDocuments({});
+//                     console.log('documentCount:'+documentCount)   
                     
-                    let article=new Article({
+//                     let article=new Article({
                         
-                        main_url:sites[z],
-                        main_url_key:sites_key[z],
-                        url:response.data.alldata[sites[z]][i].url,
+//                         main_url:sites[z],
+//                         main_url_key:sites_key[z],
+//                         url:response.data.alldata[sites[z]][i].url,
                         
-                        title:response.data.alldata[sites[z]][i].title,
-                        text:response.data.alldata[sites[z]][i].text,
-                        top_image:response.data.alldata[sites[z]][i].top_image,
-                        index:i.toString(),
-                        unique_id:documentCount.toString(),
+//                         title:response.data.alldata[sites[z]][i].title,
+//                         text:response.data.alldata[sites[z]][i].text,
+//                         top_image:response.data.alldata[sites[z]][i].top_image,
+//                         index:i.toString(),
+//                         unique_id:documentCount.toString(),
 
-                    })
+//                     })
                     
                     
-                    console.log("article.title:"+article.title)
+//                     console.log("article.title:"+article.title)
 
                     
                     
                     
                     
                     
-                    let resp=await article.save()
+//                     let resp=await article.save()
                     
-                }
-                console.log()
-            }
+//                 }
+//                 console.log()
+//             }
             
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
+//           })
+//           .catch(function (error) {
+//             console.log(error);
+//           })
 //end here extra
 setInterval(function() {
     console.log('start')
     try{
-    axios.post("http://0.0.0.0:8087/", 
-             { label : "Test" , language : "en"}  , config
-          )
-          .then(async function (response) {
-            // console.log(response.data.alldata);
-            // const sites=['http://cnn.com','http://www.time.com','http://www.bbc.co.uk']
-            const sites=response.data.allsite
-            const sites_key=response.data.key_name_all
-            for(var z=0;z<sites.length;z++){
+        axios.post("http://0.0.0.0:8087/", 
+        { label : "Test" , language : "en"}  , config
+     )
+     .then(async function (response) {
+       // console.log(response.data.alldata);
+       // const sites=['http://cnn.com','http://www.time.com','http://www.bbc.co.uk']
+       const sites=response.data.allsite
+       const sites_key=response.data.allsite_key
+       for(var z=0;z<sites.length;z++){
 
-                // var max_articles_by_one_source=2
-                var limit=response.data.alldata[sites[z]]['length']
-                // console.log("response.data.alldata[sites[z]]['length'] : "+limit)
-                // if(response.data.alldata[sites[z]]['length']>2){
-                //     limit=2
-                //     console.log("final limit  : "+limit)
-                // }
-                console.log("z:"+sites[z]+"  limit:"+limit)
-                for(var i=limit-1;i>=0;i--){
-                    
-                    const documentCount = await Article.countDocuments({});
-                    console.log('documentCount:'+documentCount)
-                    
-                    let article=new Article({
-                        main_url:sites[z],
-                        main_url_key:sites_key[z],
-                        url:response.data.alldata[sites[z]][i].url,
-                        index:i.toString(),
-                        title:response.data.alldata[sites[z]][i].title,
-                        text:response.data.alldata[sites[z]][i].text,
-                        top_image:response.data.alldata[sites[z]][i].top_image,
+           // var max_articles_by_one_source=2
+           var limit=response.data.alldata[sites[z]]['length']
+           // console.log("response.data.alldata[sites[z]]['length'] : "+limit)
+           // if(response.data.alldata[sites[z]]['length']>2){
+           //     limit=2
+           //     console.log("final limit  : "+limit)
+           // }
+           console.log("z:"+sites[z]+"  limit:"+limit)
 
-                    })
-                    
-                    
-                    console.log("article.title:"+article.title)
-                    
-                    
-                    
-                    
-                    
-                    let resp=await article.save()
-                    
-                }
-                console.log()
-            }
-            
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+           
+
+           for(var i=limit-1;i>=0;i--){
+               
+                
+               
+               
+               
+
+               const documentCount = await Article.countDocuments({});
+               console.log('documentCount:'+documentCount)   
+               
+               let article=new Article({
+                   
+                   main_url:sites[z],
+                   main_url_key:sites_key[z],
+                   url:response.data.alldata[sites[z]][i].url,
+                   
+                   title:response.data.alldata[sites[z]][i].title,
+                   text:response.data.alldata[sites[z]][i].text,
+                   top_image:response.data.alldata[sites[z]][i].top_image,
+                   index:i.toString(),
+                   unique_id:documentCount.toString(),
+
+               })
+               
+               
+               console.log("article.title:"+article.title)
+
+               
+               
+               
+               
+               
+               let resp=await article.save()
+               
+           }
+           console.log()
+       }
+       
+     })
+     .catch(function (error) {
+       console.log(error);
+     })
         }
         catch(err){
             console.log('error on server:'+err)
         }
-}, 1200000)//20 mins
+}, 600000)//10 mins
 
 
 
@@ -180,5 +192,5 @@ mongoose.connect('mongodb+srv://'+process.env.MONGO_USERNAME+':'+process.env.MON
 // });
 
 app.listen(port, function() {
-    // console.log('Server is running on port: ' + port)
+    console.log('Server is running on port: ' + process.env.PORT)
 })

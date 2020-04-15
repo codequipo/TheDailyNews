@@ -20,18 +20,18 @@ import csv
 
 li_all=[]
 key_name_all=[]
-with open('sites.csv') as csvDataFile:
-	csvReader = csv.reader(csvDataFile)
-	for row in csvReader:
-		li_all.append(row[1])
-		key_name_all.append(row[0])
+# with open('sites.csv') as csvDataFile:
+# 	csvReader = csv.reader(csvDataFile)
+# 	for row in csvReader:
+# 		li_all.append(row[1])
+# 		key_name_all.append(row[0])
 
 
 		
 		
 
 
-print(key_name_all)
+
 		
 		
 		
@@ -40,10 +40,17 @@ print(key_name_all)
 
 @app.route("/",methods=['POST','GET'])
 def hello():
-	
+
+	with open('sites.csv') as csvDataFile:
+		csvReader = csv.reader(csvDataFile)
+		for row in csvReader:
+			li_all.append(row[1])
+			key_name_all.append(row[0])
+			print(key_name_all)
+
 	print("li: ")
-	li=li_all[0:10]
-	li2=key_name_all[0:10]
+	li=li_all[0:20]
+	li2=key_name_all[0:20]
 	print(li)
 	print()
 	

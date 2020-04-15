@@ -12,51 +12,6 @@ var config = { headers: {
 }
 
 
-// route.get('/',(req,res,next)=>{
-//     axios.post("http://0.0.0.0:8086/", 
-//              { label : "Test" , language : "en"}  , config
-//           )
-//           .then(async function (response) {
-//             // console.log(response.data.alldata);
-//             const sites=['http://cnn.com','http://www.time.com','http://www.bbc.co.uk']
-//             for(var z=0;z<sites.length;z++){
-
-//                 var max_articles_by_one_source=2
-//                 var limit=response.data.alldata[sites[z]]['length']
-//                 if(response.data.alldata[sites[z]]['length']>2){
-//                     limit=2
-//                 }
-//                 console.log("response.data.alldata[sites[z]]['length'] : "+limit)
-//                 for(var i=limit-1;i>=0;i--){
-//                     console.log("z:"+z+"  i:"+i)
-
-//                     const documentCount = await Article.countDocuments({});
-//                     //console.log( "Number of users:", documentCount );
-
-//                     let article=new Article({
-//                         unique_id:documentCount,
-//                         main_url:sites[z],
-//                         url:response.data.alldata[sites[z]][i.toString()].url,
-//                         index:i.toString(),
-//                         title:response.data.alldata[sites[z]][i.toString()].title,
-//                         text:response.data.alldata[sites[z]][i.toString()].text,
-//                         top_image:response.data.alldata[sites[z]][i.toString()].top_image,
-
-//                     })
-                    
-//                     let resp=await article.save()
-                    
-//                 }
-//             }
-            
-//           })
-//           .catch(function (error) {
-//             console.log(error);
-//           });
-
-//     res.send("HeyLo")
-// })
-
 
 route.post('/getnewsbysources',async (req,res,next)=>{
     try{

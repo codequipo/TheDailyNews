@@ -10,6 +10,7 @@ import Home from './components/Home'
 import SelectPage from './components/SelectPage'
 import OptionPage from './components/OptionPage'
 import Logout from './components/Logout'
+import About from './components/About'
 
 class App extends Component {
   render() {
@@ -26,6 +27,7 @@ class App extends Component {
             <Route exact path="/SelectPage" component={SelectPage} />
             <Route exact path="/OptionPage" component={OptionPage} />
             <Route exact path="/Logout" component={Logout} />
+            <Route exact path="/About" component={About} />
           </div>
         </div>
       </Router>
