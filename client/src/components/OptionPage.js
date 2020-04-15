@@ -4,7 +4,7 @@ import { Form, Button, FormGroup, FormControl, InputGroup } from "react-bootstra
 import Dropdown from './Dropdown'
 
 import ReactSnackBar from "react-js-snackbar";
-import { MDBInput } from 'mdbreact';
+import { MDBRow,MDBCol,MDBContainer,MDBTable, MDBTableBody, MDBTableHead,MDBInput } from 'mdbreact';
 
 class SelectPage extends Component {
   constructor() {
@@ -43,6 +43,7 @@ class SelectPage extends Component {
     
     
     console.log(e.target.value)
+    console.log(e.target)
 
     // check if the check box is checked or unchecked
     let checked_temp=[]
@@ -76,6 +77,7 @@ class SelectPage extends Component {
           this.show("Select Atleast three sources")
           return
         }
+        
 
         console.log("final String: "+selected_items)
         let data={
@@ -83,6 +85,9 @@ class SelectPage extends Component {
             selected_list:selected_list
         }
         const result=await suscribe(data)
+        if(result.status=="success"){
+          this.show("Suscribed Successful")
+        }
         console.log(result)
   }
 
@@ -100,23 +105,127 @@ class SelectPage extends Component {
   render() {
     return (
         <div>
+
+
+
+
+
+{/* <MDBContainer style={{overflowY:"scroll",height:"80vh"}}>
+  <MDBRow>
+        <MDBCol size="1"><strong><h1>Index</h1></strong></MDBCol>
+        <MDBCol size="4"><strong><h1>Website</h1></strong></MDBCol>
+        <MDBCol size="5">
+          <strong><h1>Status</h1></strong>
+        </MDBCol>
+        
+        
+        
+        <MDBCol size="2"><strong><h1>Key</h1></strong></MDBCol>
+  </MDBRow>
+  {this.state.options.map((data,index)=>{
+    return(
+      <MDBRow style={{margin:"15px"}}>
+        <MDBCol size="1">{index}</MDBCol>
+        <MDBCol size="4">{data}</MDBCol>
+        <MDBCol size="5">
+          {this.state.checked[index]==0 && <MDBInput  type="checkbox"  onChange={this.onChange}  value={index}  />}
+          {this.state.checked[index]==1 && <MDBInput type="checkbox"  onChange={this.onChange}  value={index}  checked />}
+        </MDBCol>
+        
+        
+        
+        <MDBCol size="2">.col-4</MDBCol>
+      </MDBRow>
+    )
+  })}
+
+  
+</MDBContainer> */}
+<div style={{overflowY:"scroll",height:"80vh"}}>
+<h1 class="m-2">Suscribe Page:</h1>
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Index</th>
+        <th>News Sources</th>
+        <th>Status</th>
+        <th>Key</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+    {this.state.options.map((data,index)=>{
+        return(
+          <tr>
+            <td>{index}</td>
+            <td>{data}</td>
+            <td>
+              {this.state.checked[index]==0 && <input  type="checkbox"  onChange={this.onChange}  value={index}  />}
+              {this.state.checked[index]==1 && <input type="checkbox"  onChange={this.onChange}  value={index}  checked />}
+            </td>
+            <td>
+              {data.split('//')[1].split('.com')[0]}
+            </td>
+          </tr>
+            
+            
+            
+          
+          
+          )
+      })}
+
+
+      
+    </tbody>
+  </table>
+  </div>
+
               
-    <div className="container row">
+    {/* <div className="container mt-4" style={{overflowY:"scroll",height:"80vh"}}> */}
+
+
+
+
+
     
-        <div>
+        {/* <div>
           {this.state.options.map((data,index)=>{
+            
               return(
                 <div className="input-group">
                     <label>{index} {data}</label>
+                    <div class="custom-control custom-checkbox">
                     {this.state.checked[index]==0 && <input type="checkbox"  onChange={this.onChange}  value={index}  />}
                     {this.state.checked[index]==1 && <input type="checkbox"  onChange={this.onChange}  value={index}  checked />}
+                </div>
+
+          
+
                 </div>
               )
           })
           }
           
-        </div>
-        <div>
+        </div> */}
+        
+
+        {/* {this.state.checked[index]==0 && 
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" onChange={this.onChange} value={index} class="custom-control-input" id="defaultChecked2"/>
+              <label class="custom-control-label" for="defaultChecked2">{index}  {data}</label>
+            </div>
+          }
+          {this.state.checked[index]==1  &&
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" onChange={this.onChange}  value={index} class="custom-control-input" id="defaultChecked2" checked/>
+          <label class="custom-control-label" for="defaultChecked2">{index} {data}</label>
+            </div>
+          } */}
+
+
+        
+        {/* <div>
             <h1>Your Suscribed Sites:</h1>
           {this.state.checked.map((data,index)=>{
               return(
@@ -129,11 +238,11 @@ class SelectPage extends Component {
           })
           }
           
-        </div>
+        </div> */}
 
 
         
-    </div>
+    {/* </div> */}
       <Button onClick={this.handleButtonClick}>
           Submit
       </Button>
@@ -143,7 +252,60 @@ class SelectPage extends Component {
               {this.state.message}
             </ReactSnackBar>
         </div>  
+
+
+
+
+<div style={{overflowY:"scroll",height:"80vh",marginTop:"10vh"}}>
+  <h1>You have Suscribed to:</h1>
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Index</th>
+        <th>News Sources</th>
+        <th>Status</th>
+        <th>Key</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+    {this.state.options.map((data,index)=>{
+        if(this.state.checked[index]==1){
+
+        
+        return(
+          
+          <tr>
+            <td>{index}</td>
+            <td>{data}</td>
+            <td>
+              
+              <input type="checkbox"  onChange={this.onChange}  value={index}  checked />
+            </td>
+            <td>
+              {data.split('//')[1].split('.com')[0]}
+            </td>
+          </tr>
+        
+          )
+
+        }
+
+      })}
+
+
+      
+    </tbody>
+  </table>
+  </div>
+
+
     </div>
+    
+
+
+
+
 
           
             

@@ -21,7 +21,7 @@ const UserSchema = new Schema({
       type:String,
   }],
   bookmarked:[{
-      type:String,
+      type:mongoose.SchemaTypes.ObjectId,
       ref:"Article"
   }],
   date: {

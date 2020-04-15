@@ -1,6 +1,11 @@
  
 import axios from 'axios'
 
+export const logUserOut = token =>{
+  console.log('logUserOut called')
+    setTimeout(()=> localStorage.removeItem('usertoken'), 1000*60*60)
+}
+
 export const register = newUser => {
     return axios
       .post('http://localhost:5003/users/register', {
@@ -22,6 +27,7 @@ export const login = user => {
       })
       .then(response => {
         localStorage.setItem('usertoken', response.data.token)
+        logUserOut()
         return response.data
       })
       .catch(err => {

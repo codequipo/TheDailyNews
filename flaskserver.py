@@ -19,13 +19,19 @@ PORT=8087
 import csv
 
 li_all=[]
+key_name_all=[]
 with open('sites.csv') as csvDataFile:
-    csvReader = csv.reader(csvDataFile)
-    for row in csvReader:
-        li_all.append(row[1])
+	csvReader = csv.reader(csvDataFile)
+	for row in csvReader:
+		li_all.append(row[1])
+		key_name_all.append(row[0])
 
 
-print(len(li_all))
+		
+		
+
+
+print(key_name_all)
 		
 		
 		
@@ -36,7 +42,7 @@ print(len(li_all))
 def hello():
 	
 	print("li: ")
-	li=li_all[0:5]
+	li=li_all[0:20]
 	print(li)
 	print()
 	
@@ -71,7 +77,7 @@ def hello():
 
 				d[k]=info
 				k+=1
-				if k==2:
+				if k==5:
 					break
 			except Exception as e:
 				print("Entered except block :"+str(e))
@@ -90,7 +96,8 @@ def hello():
 	result={
 		'success':True,
 		'alldata':res_data,
-		'allsite':li
+		'allsite':li,
+		'allsite_key':key_name_all
 	}
 	return json.dumps(result)
 

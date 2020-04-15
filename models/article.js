@@ -10,6 +10,10 @@ const ArticleSchema=new Schema({
         type:String,
         Default:'default_url'
     },
+    main_url_key:{
+        type:String,
+        Default:'default_url_key'
+    },
     index:{
         type:String,
         Default:'default_index'

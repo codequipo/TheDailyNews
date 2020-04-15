@@ -40,54 +40,56 @@ var config = { headers: {
 }
 
 // setInterval(function() {
-//     console.log('start')
-//     axios.post("http://0.0.0.0:8087/", 
-//              { label : "Test" , language : "en"}  , config
-//           )
-//           .then(async function (response) {
-//             // console.log(response.data.alldata);
-//             // const sites=['http://cnn.com','http://www.time.com','http://www.bbc.co.uk']
-//             const sites=response.data.allsite
-//             for(var z=0;z<sites.length;z++){
+    console.log('start')
+    axios.post("http://0.0.0.0:8087/", 
+             { label : "Test" , language : "en"}  , config
+          )
+          .then(async function (response) {
+            // console.log(response.data.alldata);
+            // const sites=['http://cnn.com','http://www.time.com','http://www.bbc.co.uk']
+            const sites=response.data.allsite
+            const sites_key=response.data.key_name_all
+            for(var z=0;z<sites.length;z++){
 
-//                 // var max_articles_by_one_source=2
-//                 var limit=response.data.alldata[sites[z]]['length']
-//                 // console.log("response.data.alldata[sites[z]]['length'] : "+limit)
-//                 // if(response.data.alldata[sites[z]]['length']>2){
-//                 //     limit=2
-//                 //     console.log("final limit  : "+limit)
-//                 // }
-//                 console.log("z:"+sites[z]+"  limit:"+limit)
-//                 for(var i=limit-1;i>=0;i--){
+                // var max_articles_by_one_source=2
+                var limit=response.data.alldata[sites[z]]['length']
+                // console.log("response.data.alldata[sites[z]]['length'] : "+limit)
+                // if(response.data.alldata[sites[z]]['length']>2){
+                //     limit=2
+                //     console.log("final limit  : "+limit)
+                // }
+                console.log("z:"+sites[z]+"  limit:"+limit)
+                for(var i=limit-1;i>=0;i--){
                     
                     
-//                     let article=new Article({
-//                         main_url:sites[z],
-//                         url:response.data.alldata[sites[z]][i].url,
-//                         index:i.toString(),
-//                         title:response.data.alldata[sites[z]][i].title,
-//                         text:response.data.alldata[sites[z]][i].text,
-//                         top_image:response.data.alldata[sites[z]][i].top_image,
+                    let article=new Article({
+                        main_url:sites[z],
+                        main_url_key:sites_key[z],
+                        url:response.data.alldata[sites[z]][i].url,
+                        index:i.toString(),
+                        title:response.data.alldata[sites[z]][i].title,
+                        text:response.data.alldata[sites[z]][i].text,
+                        top_image:response.data.alldata[sites[z]][i].top_image,
 
-//                     })
+                    })
                     
                     
-//                     console.log("article.title:"+article.title)
+                    console.log("article.title:"+article.title)
                     
                     
                     
                     
                     
-//                     let resp=await article.save()
+                    let resp=await article.save()
                     
-//                 }
-//                 console.log()
-//             }
+                }
+                console.log()
+            }
             
-//           })
-//           .catch(function (error) {
-//             console.log(error);
-//           });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
 // }, 120000)
 
 

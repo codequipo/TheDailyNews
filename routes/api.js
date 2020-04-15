@@ -73,6 +73,23 @@ route.post('/getnewsbysources',async (req,res,next)=>{
     }
 })
 
+route.post('/getSummary',async (req,res,next)=>{
+  try{
+      // main_urls=req.body.main_urls.split(',')
+      // console.log(main_urls)
+      
+      
+      const article=await Article.find({ url:req.body.article_url })
+
+
+      
+      return res.json({ status:'success',article:article })
+  }
+  catch(err){
+      return res.json({ status:'fail',error:err })
+  }
+})
+
 
 route.post('/suscribe',checkAuth,async (req, res) => {
   
@@ -147,9 +164,16 @@ route.post('/suscribe',checkAuth,async (req, res) => {
     })
     
     if(user){
+      if(!req.body.id){
+        res.json({status:'failed',message:'Id not received'})
+      }
         try{
                 
                 li=user.bookmarked
+                
+                console.log("Before  && id:"+req.body.id)
+                console.log(li)
+                console.log()
                 var index=li.indexOf(req.body.id)
                 if(index>-1){
                     li.splice(index,1)
@@ -159,6 +183,9 @@ route.post('/suscribe',checkAuth,async (req, res) => {
                         _id: decoded._id
                     }).select('bookmarked').populate('bookmarked').exec()
                     
+                    
+                    
+
                     res.json({status:'success',message:'Removed',bookmarks:u.bookmarked})
                 }
                 else{

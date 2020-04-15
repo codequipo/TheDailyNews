@@ -60,7 +60,7 @@ users.post('/register', (req, res) => {
                   email: user.email
                 }
                 let token = jwt.sign(payload, process.env.SECRET_KEY, {
-                  expiresIn: 1440
+                  expiresIn: '1h'
                 })
                 res.json({token:token})
               } else {

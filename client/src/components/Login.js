@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { login } from './UserFuctions'
+import { MDBContainer, MDBRow, MDBCol, MDBBtn } from 'mdbreact';
 
 class Login extends Component {
   constructor() {
@@ -38,6 +39,15 @@ class Login extends Component {
 
   render() {
     return (
+
+        
+
+
+
+
+
+
+
       <div className="container">
         <div className="row">
           <div className="col-md-6 mt-5 mx-auto">
@@ -80,3 +90,39 @@ class Login extends Component {
 }
 
 export default Login
+
+
+
+{/* <MDBContainer>
+  <MDBRow>
+    <MDBCol md="6">
+      <form onSubmit={this.onSubmit}>
+        <p className="h4 text-center mb-4">Sign in</p>
+        <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
+          Your email
+        </label>
+        <input 
+          type="email"
+          id="defaultFormLoginEmailEx" 
+          className="form-control"
+          value={this.state.email}
+          onChange={this.onChange}
+          />
+        <br />
+        <label htmlFor="defaultFormLoginPasswordEx" className="grey-text">
+          Your password
+        </label>
+        <input 
+          type="password"
+          id="defaultFormLoginPasswordEx" 
+          className="form-control"
+          value={this.state.password}
+          onChange={this.onChange}
+          />
+        <div className="text-center mt-4">
+          <MDBBtn color="indigo" type="submit">Login</MDBBtn>
+        </div>
+      </form>
+    </MDBCol>
+  </MDBRow>
+</MDBContainer> */}
