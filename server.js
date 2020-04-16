@@ -38,6 +38,10 @@ var config = { headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'}
 }
+
+
+
+
 //Just called in beginning to not waste time
 // console.log('start')
 //     axios.post("http://0.0.0.0:8087/", 
