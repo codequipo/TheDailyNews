@@ -13,20 +13,21 @@ body {
   
   .column {
     float: left;
-    width: 50%;
+    width: 25%;
     margin-bottom: 16px;
     padding: 0 8px;
   }
   
   .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    margin: 8px;
+    margin: 2px;
+    height: 40px
   }
   
   .about-section {
     padding: 50px;
     text-align: center;
-    background-color: #474e5d;
+    background-color: #353941;
     color: white;
   }
   

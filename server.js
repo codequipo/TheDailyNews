@@ -108,6 +108,23 @@ var config = { headers: {
 //             console.log(error);
 //           })
 //end here extra
+
+// axios.post('http://0.0.0.0:8087/li_all_dict',{},config)
+// .then(async (result)=>{
+//     let respo=result.data
+//     // console.log(result.data)
+//     for(var i=0;i<respo.length;i++){
+//         let source=new Source({
+//             index:respo[i].index,
+//             url:respo[i].url,
+//             unique_id:respo[i].unique_id
+//         })
+//         console.log(source.index)
+//         await source.save()
+//     }
+// })
+
+
 setInterval(function() {
     console.log('start')
     try{

@@ -4,6 +4,7 @@ const cors = require('cors')
 route.use(cors())
 const axios=require('axios')
 const Article=require('../models/article')
+const Source=require('../models/source')
 const checkAuth=require('./checkAuth')
 
 var config = { headers: {  
@@ -127,7 +128,7 @@ route.post('/suscribe',checkAuth,async (req, res) => {
     
     if(user){
       if(!req.body.id){
-        res.json({status:'failed',message:'Id not received'})
+        res.json({status:'failed',message:'Click Bookmark again'})
       }
         try{
                 
@@ -148,7 +149,7 @@ route.post('/suscribe',checkAuth,async (req, res) => {
                     
                     
 
-                    res.json({status:'success',message:'Removed',bookmarks:u.bookmarked})
+                    res.json({status:'success',message:'Removed from Bookmarks',bookmarks:u.bookmarked})
                 }
                 else{
                     li.push(req.body.id)
@@ -158,7 +159,7 @@ route.post('/suscribe',checkAuth,async (req, res) => {
                         _id: decoded._id
                     }).select('bookmarked').populate('bookmarked').exec()
                     
-                    res.json({status:'success',message:'Added',bookmarks:u.bookmarked})
+                    res.json({status:'success',message:'Added to Bookmarks',bookmarks:u.bookmarked})
                 }
                 
               }
@@ -210,5 +211,21 @@ route.post('/suscribe',checkAuth,async (req, res) => {
   
       
   })
+
+  route.post('/allsources',async (req,res,next)=>{
+    try{
+        
+        
+        li=[]
+        
+        li=await Source.find({})
+
+        
+        return res.json({ status:'success',sources:li })
+    }
+    catch(err){
+        return res.json({ status:'fail',error:err })
+    }
+})
 
 module.exports=route

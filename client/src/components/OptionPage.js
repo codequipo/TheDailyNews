@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { getnewsbysources, suscribe,currentUser } from './UserFuctions'
+import { allsourcesFun,getnewsbysources, suscribe,currentUser } from './UserFuctions'
 import { Form, Button, FormGroup, FormControl, InputGroup } from "react-bootstrap";
-import Dropdown from './Dropdown'
 
+import { BrowserRouter as Router, Route,Switch,Redirect } from 'react-router-dom'
 import ReactSnackBar from "react-js-snackbar";
-import { MDBRow,MDBCol,MDBContainer,MDBTable, MDBTableBody, MDBTableHead,MDBInput } from 'mdbreact';
+import { MDBBadge,MDBIcon,MDBRow,MDBCol,MDBContainer,MDBTable, MDBTableBody, MDBTableHead,MDBInput } from 'mdbreact';
 
 class SelectPage extends Component {
   constructor() {
@@ -17,7 +17,9 @@ class SelectPage extends Component {
 
         Show: false,
         Showing: false,
-        message:''
+        message:'',
+        allsources:[],
+        display_sources:[]
     }
 
     this.onChange = this.onChange.bind(this)
@@ -28,6 +30,16 @@ class SelectPage extends Component {
   
   async componentDidMount() {
     const resp=await currentUser()
+    const allsources=await allsourcesFun()
+    console.log(allsources.sources)
+    if(allsources.status=="success"){
+      this.setState({
+        allsources:allsources.sources,
+        display_sources:allsources.sources
+      })
+    }
+    
+
     const curr=resp.user
     console.log('curr.suscribed:  '+curr.suscribed)
     var temp_checked=this.state.checked
@@ -44,18 +56,18 @@ class SelectPage extends Component {
     const query=e.target.value
     if(query==""){
       this.setState({
-        options:this.state.original_options
+        display_sources:this.state.allsources
       })
       return
     }
 
-    let filterlist=this.state.original_options.filter((item)=>{
-      if(item.toLowerCase().search(query.toLowerCase())!=-1){
+    let filterlist=this.state.allsources.filter((item)=>{
+      if(item.url.toLowerCase().search(query.toLowerCase())!=-1){
         return item
       }
     })
     this.setState({
-      options:filterlist
+      display_sources:filterlist
     })
 
   }
@@ -88,14 +100,14 @@ class SelectPage extends Component {
   async handleButtonClick(e){
         var selected_items=""
         var selected_list=[]
-        for(var i=0;i<this.state.options.length;i++){
+        for(var i=0;i<this.state.allsources.length;i++){
           if(this.state.checked[i]==1){
-            selected_items=selected_items.concat(this.state.options[i],',')
-            selected_list.push(this.state.options[i])
+            selected_items=selected_items.concat(this.state.display_sources[i].url,',')
+            selected_list.push(this.state.display_sources[i].url)
           }
         }
-        if(selected_items.length<=3){
-          this.show("Select Atleast three sources")
+        if(selected_list.length<=3){
+          this.show("Select Atleast 4 sources")
           return
         }
         
@@ -107,7 +119,7 @@ class SelectPage extends Component {
         }
         const result=await suscribe(data)
         if(result.status=="success"){
-          this.show("Suscribed Successful")
+          this.show("Subscribed to "+selected_list.length+" sources successfully")
         }
         console.log(result)
   }
@@ -124,15 +136,28 @@ class SelectPage extends Component {
   
 
   render() {
+    if (!localStorage.usertoken || localStorage.usertoken=="undefined"){
+      return <Redirect
+          to="/error"
+          />;
+    }
     return (
-        <div>
+        <div className="container mt-4" style={{textAlign:"center"}}>
 
 
-<input onChange={this.changeOptionList} type="text" placeholder="Search..." />
+{/* <input onChange={this.changeOptionList} type="text" placeholder="Search..." /> */}
 
-<div style={{overflowY:"scroll",height:"80vh"}}>
-<h1 class="m-2">Suscribe Page:</h1>
-<table class="table table-striped">
+<Form className="m-4">  
+  <Form.Group>
+    {/* <Form.Label>Password</Form.Label> */}
+    <Form.Control onChange={this.changeOptionList} type="text" placeholder="Search..." />
+  </Form.Group>
+</Form>
+
+<h1 class="m-2">Subscribe Page:<MDBBadge color="primary">{this.state.display_sources.length}</MDBBadge></h1>
+<div className="container mt-4" style={{overflowY:"scroll",height:"80vh"}}>
+
+<table class="table table-striped table-dark">
     <thead>
       <tr>
         <th>Index</th>
@@ -143,7 +168,7 @@ class SelectPage extends Component {
     </thead>
     <tbody>
       
-    {this.state.options.map((data,index)=>{
+    {/* {this.state.options.map((data,index)=>{
         return(
           <tr>
             <td>{index}</td>
@@ -155,12 +180,23 @@ class SelectPage extends Component {
             <td>
               {data.split('//')[1].split('.com')[0]}
             </td>
-          </tr>
-            
-            
-            
-          
-          
+          </tr> 
+          )
+      })} */}
+
+      {this.state.display_sources.map((data,index)=>{
+        return(
+          <tr>
+            <td>{data.index}</td>
+            <td>{data.url}</td>
+            <td>
+              {this.state.checked[data.index]==0 && <input  type="checkbox"  onChange={this.onChange}  value={data.index}  />}
+              {this.state.checked[data.index]==1 && <input type="checkbox"  onChange={this.onChange}  value={data.index}  checked />}
+            </td>
+            <td>
+              {data.unique_id}
+            </td>
+          </tr> 
           )
       })}
 
@@ -232,22 +268,25 @@ class SelectPage extends Component {
 
         
     {/* </div> */}
-      <Button onClick={this.handleButtonClick}>
+    <Button className="text-center" onClick={this.handleButtonClick}>
           Submit
       </Button>
       <div>
+      
             
-            <ReactSnackBar Icon={<span>🦄</span>} Show={this.state.Show}>
+            <ReactSnackBar Icon={<MDBIcon icon="newspaper" />} Show={this.state.Show}>
               {this.state.message}
             </ReactSnackBar>
         </div>  
 
 
 
-
+<MDBContainer>
+  <br></br>
+  <h1>Your Subscribitions:</h1>
 <div style={{overflowY:"scroll",height:"80vh",marginTop:"10vh"}}>
-  <h1>You have Suscribed to:</h1>
-<table class="table table-striped">
+  
+<table class="table table-striped table-dark">
     <thead>
       <tr>
         <th>Index</th>
@@ -258,21 +297,21 @@ class SelectPage extends Component {
     </thead>
     <tbody>
       
-    {this.state.options.map((data,index)=>{
-        if(this.state.checked[index]==1){
+    {this.state.display_sources.map((data,index)=>{
+        if(this.state.checked[data.index]==1){
 
         
         return(
           
           <tr>
-            <td>{index}</td>
-            <td>{data}</td>
+            <td>{data.index}</td>
+            <td>{data.url}</td>
             <td>
               
-              <input type="checkbox"  onChange={this.onChange}  value={index}  checked />
+              <input type="checkbox"  onChange={this.onChange}  value={data.index}  checked />
             </td>
             <td>
-              {data.split('//')[1].split('.com')[0]}
+              {data.unique_id}
             </td>
           </tr>
         
@@ -287,7 +326,7 @@ class SelectPage extends Component {
     </tbody>
   </table>
   </div>
-
+  </MDBContainer>
 
     </div>
     

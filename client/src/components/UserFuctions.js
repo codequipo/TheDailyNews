@@ -17,7 +17,8 @@ export const register = newUser => {
         password: newUser.password
       })
       .then(response => {
-        console.log('Registered')
+        console.log(response.data)
+        return response.data
       })
   }
 
@@ -34,6 +35,7 @@ export const login = user => {
       })
       .catch(err => {
         console.log(err)
+        return {'status':'fail'}
       })
   }
 
@@ -103,6 +105,18 @@ export const suscribe=async(data)=>{
 
 export const currentUser=async()=>{
   const result=await axios.post('http://localhost:'+port+'/api/currentUser',{},
+  {
+    headers:{
+      'authorization':'Bearer '+localStorage.usertoken,
+      
+    }
+  }
+  )
+  return result.data
+}
+
+export const allsourcesFun=async()=>{
+  const result=await axios.post('http://localhost:'+port+'/api/allsources',{},
   {
     headers:{
       'authorization':'Bearer '+localStorage.usertoken,

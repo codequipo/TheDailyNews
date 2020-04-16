@@ -28,18 +28,18 @@ users.post('/register', (req, res) => {
               userData.password = hash
               User.create(userData)
                 .then(user => {
-                  res.json({ status:"success",Data: user.email + 'Registered!' })
+                  res.json({ status:"success",Data: user.email + 'registered!',message:user.email + 'registered!' })
                 })
                 .catch(err => {
                   res.send('error: ' + err)
                 })
             })
           } else {
-            res.json({ status:"success",Data: 'User already exists' })
+            res.json({ status:"fail",Data: 'User already exists',message:'User already exists' })
           }
         })
         .catch(err => {
-          res.json({ status:"success",Data: err })
+          res.json({ status:"fail",Data: err,message:err })
         })
     })
 
@@ -62,17 +62,17 @@ users.post('/register', (req, res) => {
                 let token = jwt.sign(payload, process.env.SECRET_KEY, {
                   expiresIn: '1h'
                 })
-                res.json({token:token})
+                res.json({token:token,message:'Login Successful',status:'success'})
               } else {
                 // Passwords don't match
-                res.json({ status:"fail",error: 'Password doesnt match' })
+                res.json({ status:"fail",error: 'Password doesnt match',message:'Password doesnt match' })
               }
             } else {
-              res.json({ status:"fail",error: 'User does not exist' })
+              res.json({ status:"fail",error: 'User does not exist',message:'User does not exist' })
             }
           })
           .catch(err => {
-            res.json({ status:"fail",error: err })
+            res.json({ status:"fail",error: err,message:err })
           })
       })
 

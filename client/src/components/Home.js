@@ -3,8 +3,8 @@ import { getnewsbysources,getBookMarkedArticle,currentUser,addToBookmark } from 
 // import { Button } from 'react-bootstrap'
 import Button from '@material-ui/core/Button';
 
-import news from './news.jpeg'
 
+import { BrowserRouter as Router, Route,Switch,Redirect } from 'react-router-dom'
 import { MDBContainer,MDBModalFooter,MDBModalBody,MDBModalHeader,MDBModal,MDBRow,MDBIcon,MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
 import ReactSnackBar from "react-js-snackbar";
 
@@ -19,10 +19,12 @@ class Home extends Component {
       indexlist:[],
       modal13: false,
       summaryText:'',
+      summaryImage:'',
 
       Show: false,
       Showing: false,
-      message:'Hello There'
+      message:'Hello There',
+      zero:false
     }
 
     this.onChange = this.onChange.bind(this)
@@ -33,7 +35,8 @@ class Home extends Component {
     let modalNumber = 'modal' + '13'
     this.setState({
       modal13: !this.state.modal13,
-      summaryText:this.state.articles[k].text
+      summaryText:this.state.articles[k].text,
+      summaryImage:this.state.articles[k].top_image
     });
   }
 
@@ -75,6 +78,11 @@ class Home extends Component {
       await getnewsbysources(data).then(res => {
         if(res.status=="success"){
             console.log(res.articles)
+            if(res.articles.length==0){
+              this.setState({
+                zero:true
+              })
+            }
           this.setState({
               articles:res.articles,
               page_url:page_url
@@ -140,6 +148,17 @@ class Home extends Component {
   
 
   render() {
+    if (!localStorage.usertoken || localStorage.usertoken=="undefined"){
+      return <Redirect
+          to="/error"
+          />;
+    }
+    if(this.state.zero==true){
+      console.log('this.state.articles.length:'+this.state.articles.length)
+      return(
+        <h2 class="text-center">You have Not subscribed to any sources to yet. Follow the <a href="/OptionPage">link</a></h2>
+      )
+    }
     return (
       <div className="container">
 
@@ -199,7 +218,7 @@ class Home extends Component {
 
           <MDBCardBody cascade className='text-center'>
             <MDBCardTitle className='card-title'>
-              <strong>{this.state.articles[k].main_url.split('//')[1].split('.com')[0]}</strong>
+              <strong>{this.state.articles[k].main_url_key}</strong>
             </MDBCardTitle>
 
             <p className='font-weight-bold blue-text'><a href={this.state.articles[k].main_url}>Main Link</a></p>
@@ -223,7 +242,7 @@ class Home extends Component {
                   
                  type="button" class="btn btn-secondary">Article</button>
                 
-                <button onClick={this.toggle(k)} type="button" class="btn btn-info">Summary</button>
+                <button onClick={this.toggle(k)} type="button" class="btn btn-primary">Summary</button>
                 
             </MDBCol>
 
@@ -265,10 +284,13 @@ class Home extends Component {
 
 
 <MDBModal isOpen={this.state.modal13} toggle={this.toggle(0)}>
+        
         <MDBModalHeader toggle={this.toggle(0)}>
           Summary
         </MDBModalHeader>
         <MDBModalBody>
+          
+        <img src={this.state.summaryImage} style={{width:"100%",height:"30vh"}}/>
           {this.state.summaryText}
         </MDBModalBody>
         <MDBModalFooter>
@@ -286,7 +308,7 @@ class Home extends Component {
       
       <div>
             
-            <ReactSnackBar Icon={<span>🦄</span>} Show={this.state.Show}>
+            <ReactSnackBar Icon={<MDBIcon icon="newspaper" />} Show={this.state.Show}>
               {this.state.message}
             </ReactSnackBar>
         </div>  
