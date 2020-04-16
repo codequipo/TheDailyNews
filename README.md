@@ -74,3 +74,4 @@ This project was part of our submission for the subject MIP
 - [@Talha Chafekar](https://github.com/talha1503)
 
 ------------------------------------------
+<h3 align="center"><b>Developed with :heart: by <a href="https://github.com/m607stars">Mayank</a>, <a href="https://github.com/tushargithub44">Tushar</a> , <a href="https://github.com/rugvedb">Rugved</a> and <a href="https://github.com/talha1503">Talha</a></b></h1>
