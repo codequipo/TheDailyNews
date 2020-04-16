@@ -14,7 +14,7 @@ import json
 import requests
 
 url = "https://graph.facebook.com/v2.6/me/messages"
-ngrok_url = ''
+ngrok_url = 'https://07d39d1e.ngrok.io/api/'
 
 source_csv = pd.read_csv('sites.csv')
 
@@ -27,6 +27,10 @@ import csv
 
 li_all=[]
 key_name_all=[]
+
+@app.route('/',methods = ['GET','POST'])
+def base():
+	return 'hello world'
 
 
 @app.route('/webhook', methods=['GET', 'POST'])
@@ -42,17 +46,19 @@ def webhook():
 		summary = requests.post(summary_url,data = data2)
 		article_dict = json.loads(summary.text)
 		article_summary = article_dict['article'][0]['text']
+		articl_image = article_dict['article'][0]['top_image']
 		return {'fulfillmentText': article_summary}
 
 	if req.get('queryResult').get('intent').get('displayName') == 'source_intent':
 		source_name = req.get('queryResult').get('queryText')[7:]
 		source_link = source_csv['link'][source_csv.loc[source_csv['name']==source_name].index[0]]
 		news_url = ngrok_url + 'getnewsbysources'
-		data1 = {'main_urls':source_link}
+		data1 = {'main_urls':source_link }
 		post_articles = requests.post(news_url,data = data1)
 		list_of_articles = json.loads(post_articles.text)
 		li = list_of_articles['articles']
 		messages = []
+		print(len(li))
 		for index,item in enumerate(li):
 			temp = dict()
 			with open('format.json','r') as f:
@@ -61,15 +67,20 @@ def webhook():
 			temp['card']['buttons'][0]['postback'] = 'Summarize:'+item['unique_id']
 			temp['card']['title'] = item['title']
 			temp['card']['imageUri'] = item['top_image']
+			print(item['url'])
+			temp['card']['buttons'][1]['postback'] = item['url']
 			messages.append(temp)
 
 		messages = messages[:10]
+		# print(messages)
 		return jsonify({'fulfillmentMessages': messages })  
+	
+
 	return{'fulfillmentText':"Please check your responses again  "}
 
 
 
-@app.route("/",methods=['POST','GET'])
+@app.route("/db",methods=['POST','GET'])
 def build_database():
 
 	with open('sites.csv') as csvDataFile:
@@ -189,4 +200,4 @@ def driver(article,required_length):
 	return summary
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=PORT)
+    app.run(port=PORT)
