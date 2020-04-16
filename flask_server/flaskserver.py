@@ -5,11 +5,18 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import sent_tokenize,word_tokenize
 import requests
 import re
-from flask import Flask,request
-from flask import request,jsonify
+from flask import Flask,request,jsonify,make_response
 import nltk
 from flask_cors import CORS
 import newspaper
+import pandas as pd
+import json
+import requests
+
+url = "https://graph.facebook.com/v2.6/me/messages"
+ngrok_url = ''
+
+source_csv = pd.read_csv('sites.csv')
 
 app = Flask(__name__)
 CORS(app)
@@ -20,26 +27,50 @@ import csv
 
 li_all=[]
 key_name_all=[]
-# with open('sites.csv') as csvDataFile:
-# 	csvReader = csv.reader(csvDataFile)
-# 	for row in csvReader:
-# 		li_all.append(row[1])
-# 		key_name_all.append(row[0])
 
 
-		
-		
+@app.route('/webhook', methods=['GET', 'POST'])
+def webhook():
+	req = request.get_json(force=True)
+	print("-"*80)
+	print(req.get('queryResult').get('intent').get('displayName'))
+	print("-"*80)
+	if req.get('queryResult').get('intent').get('displayName') == 'summarize_intent':
+		database_id = req.get('queryResult').get('queryText').strip('Summarize:')
+		summary_url = ngrok_url + 'getSummary'
+		data2 = {'unique_id': database_id }
+		summary = requests.post(summary_url,data = data2)
+		article_dict = json.loads(summary.text)
+		article_summary = article_dict['article'][0]['text']
+		return {'fulfillmentText': article_summary}
+
+	if req.get('queryResult').get('intent').get('displayName') == 'source_intent':
+		source_name = req.get('queryResult').get('queryText')[7:]
+		source_link = source_csv['link'][source_csv.loc[source_csv['name']==source_name].index[0]]
+		news_url = ngrok_url + 'getnewsbysources'
+		data1 = {'main_urls':source_link}
+		post_articles = requests.post(news_url,data = data1)
+		list_of_articles = json.loads(post_articles.text)
+		li = list_of_articles['articles']
+		messages = []
+		for index,item in enumerate(li):
+			temp = dict()
+			with open('format.json','r') as f:
+				temp = json.load(f)
+
+			temp['card']['buttons'][0]['postback'] = 'Summarize:'+item['unique_id']
+			temp['card']['title'] = item['title']
+			temp['card']['imageUri'] = item['top_image']
+			messages.append(temp)
+
+		messages = messages[:10]
+		return jsonify({'fulfillmentMessages': messages })  
+	return{'fulfillmentText':"Please check your responses again  "}
 
 
-
-		
-		
-		
-
-# print(li)
 
 @app.route("/",methods=['POST','GET'])
-def hello():
+def build_database():
 
 	with open('sites.csv') as csvDataFile:
 		csvReader = csv.reader(csvDataFile)
@@ -56,10 +87,6 @@ def hello():
 	
 	res_data=dict()
 	for url in li:
-
-		
-		
-		#request.get_json()['language']
 		toi=newspaper.build(url,memoize_articles=True,language='en')
 		
 		d=dict()
@@ -68,21 +95,13 @@ def hello():
 			try:
 				article.download() 
 				article.parse() 
-				# article.nlp() 
-
 				summary = driver(article.text,2)
-
 				info=dict()
 				info['url']=article.url
 				info['title']=article.title
 				print('title:::::::::::::'+info['title'])
 				info['text']=summary
-				# info['summary']=article.summary
-				# info['keywords']=article.keywords
 				info['top_image']=article.top_image
-				# print("article.publish_date : "+article.publish_date)
-
-				
 
 				d[k]=info
 				k+=1
@@ -91,16 +110,10 @@ def hello():
 			except Exception as e:
 				print("Entered except block :"+str(e))
 				pass
-		# d['length']=len(toi.articles)
 		d['length']=k
 		res_data[url]=d
 
 		print(url+"   NewArticles : "+str(k))
-
-		
-		
-    
-    
 
 	result={
 		'success':True,
