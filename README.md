@@ -47,6 +47,7 @@ So it is best to use a machine generated text. Now this machine generated text c
 - [ ] Improve the existing summarizer. 
 - [ ] Try out Deep Learning based models for summarization.
 - [ ] Integrate twilio for text based messaging. 
+- [ ] Create Android App for the same. 
 
 ------------------------------------------
 ###             Note
