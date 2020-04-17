@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px src="./assets/logo.png" alt="Briefly-logo"></a>
+ <img width=200px src="./assets/logo.png"</a>
 </p>
 <h1 align = 'center'> TheDailyNews</h1>
 <br>
