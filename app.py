@@ -61,7 +61,7 @@ def webhook():
 		print(len(li))
 		for index,item in enumerate(li):
 			temp = dict()
-			with open('format.json','r') as f:
+			with open('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/flask_server/format.json','r') as f:
 				temp = json.load(f)
 
 			temp['card']['buttons'][0]['postback'] = 'Summarize:'+item['unique_id']
