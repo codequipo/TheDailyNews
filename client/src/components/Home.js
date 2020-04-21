@@ -181,13 +181,13 @@ class Home extends Component {
 
                                 <MDBCardBody cascade className='text-center'>
                                   <MDBCardTitle className='card-title'>
-                                    <strong>{this.state.articles[k].main_url_key}</strong>
+                                    <strong>{this.state.articles[k].title}</strong>
                                   </MDBCardTitle>
 
                                   <p className='font-weight-bold blue-text'><a href={this.state.articles[k].main_url}>Main Link</a></p>
 
                                   <MDBCardText>
-                                  <MDBIcon icon='quote-left' />{this.state.articles[k].title}{' '}<MDBIcon icon='quote-right' />
+                                  <MDBIcon icon='quote-left' />{this.state.articles[k].main_url_key}{' '}<MDBIcon icon='quote-right' />
                                   </MDBCardText>
 
                                   <MDBCol md='20' className='d-flex justify-content-center'>
