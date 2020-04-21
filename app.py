@@ -53,6 +53,7 @@ def webhook():
 
 	if req.get('queryResult').get('intent').get('displayName') == 'source_intent':
 		source_name = req.get('queryResult').get('queryText')[7:]
+		source_csv.columns = ['name','link']
 		source_link = source_csv['link'][source_csv.loc[source_csv['name']==source_name].index[0]]
 		news_url = ngrok_url + 'getnewsbysources'
 		data1 = {'main_urls':source_link }
