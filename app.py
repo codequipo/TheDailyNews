@@ -14,7 +14,7 @@ import json
 import requests
 
 url = "https://graph.facebook.com/v2.6/me/messages"
-ngrok_url = 'https://07d39d1e.ngrok.io/api/'
+ngrok_url = 'https://the-daily-news-app.herokuapp.com/api/'
 
 source_csv = pd.read_csv('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv')
 
