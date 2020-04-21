@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import { BrowserRouter as Router, Route,Switch,Redirect } from 'react-router-dom'
 import { MDBContainer,MDBModalFooter,MDBModalBody,MDBModalHeader,MDBModal,MDBRow,MDBIcon,MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
 import ReactSnackBar from "react-js-snackbar";
-
+//Detect changes
 class Home extends Component {
   constructor() {
     super()
