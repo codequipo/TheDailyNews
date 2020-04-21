@@ -16,7 +16,7 @@ import requests
 url = "https://graph.facebook.com/v2.6/me/messages"
 ngrok_url = 'https://07d39d1e.ngrok.io/api/'
 
-source_csv = pd.read_csv('sites.csv')
+source_csv = pd.read_csv('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv')
 
 app = Flask(__name__)
 CORS(app)
@@ -83,7 +83,7 @@ def webhook():
 @app.route("/db",methods=['POST','GET'])
 def build_database():
 
-	with open('sites.csv') as csvDataFile:
+	with open('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv') as csvDataFile:
 		csvReader = csv.reader(csvDataFile)
 		for row in csvReader:
 			li_all.append(row[1])
