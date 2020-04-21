@@ -1,5 +1,7 @@
 import json
 import numpy as np 
+import urllib
+from urllib.request import urlopen
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import sent_tokenize,word_tokenize
@@ -61,8 +63,9 @@ def webhook():
 		print(len(li))
 		for index,item in enumerate(li):
 			temp = dict()
-			with open('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/flask_server/format.json','r') as f:
-				temp = json.load(f)
+			req = urllib.request.Request('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/flask_server/format.json')
+			with urllib.request.urlopen(req) as f:
+    				temp = json.load(f)
 
 			temp['card']['buttons'][0]['postback'] = 'Summarize:'+item['unique_id']
 			temp['card']['title'] = item['title']
