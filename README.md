@@ -44,7 +44,7 @@ So it is best to use a machine generated text. Now this machine generated text c
 
 <h3 align="center"> TheDailyNews App </a></h3>
 <p>
-<h3 align='center'> Download the app here: <a href="https://github.com/codequipo/TheDailyNews/blob/master/Android/app-release.apk" target="_top">TheDailyNews App</a></h3>
+<h3 align='center'> Download the app here: <a href="https://github.com/codequipo/TheDailyNews/blob/master/Android/app-release.apk" target="_top">Download Link: </a></h3>
 <p align="center">
 <img src="./assets/android_dailynewsapp.gif" width=250px>
 </p>
@@ -70,6 +70,7 @@ This project was part of our submission for the subject MIP
 `Backend` : Python ,Flask , NodeJS , Dialogflow <br>
 `Database` : MongoDB <br>
 `Frontend` : ReactJS , CSS , HTML , Bootstrap  <br>
+`Android` : Java <br>
 
 ------------------------------------------
 ### Contributing
