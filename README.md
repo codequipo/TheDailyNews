@@ -33,7 +33,10 @@ So it is best to use a machine generated text. Now this machine generated text c
 
 <h3 align="center"> TheDailyNews Bot   </a></h3>
 <br>
-<p align="center">
+<p>
+<h3 align='center'> Check the bot in action over here: <a href="https://www.facebook.com/DailyNews-383636995052537/?ref=bookmarks" target="_top">DailyNews Bot</a>  </h3>
+</p>
+<p align="center"> 
 <img src="./assets/chatbot_gif1.gif" width=245px>
 <img src="./assets/chatbot_gif2.gif" width=245px>
 </p>
