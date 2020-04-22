@@ -30,7 +30,8 @@ So it is best to use a machine generated text. Now this machine generated text c
 <p align="center">
   <img src ="./assets/website.gif" width = 500px>
 </p>
-
+<br>
+  
 <h3 align="center"> TheDailyNews Bot   </a></h3>
 <br>
 <p>
@@ -39,6 +40,13 @@ So it is best to use a machine generated text. Now this machine generated text c
 <p align="center"> 
 <img src="./assets/chatbot_gif1.gif" width=245px>
 <img src="./assets/chatbot_gif2.gif" width=245px>
+</p>
+
+<h3 align="center"> TheDailyNews App </a></h3>
+<p>
+<h3 align='center'> Download the app here: <a href="https://github.com/codequipo/TheDailyNews/blob/master/Android/app-release.apk" target="_top">TheDailyNews App</a></h3>
+<p align="center">
+<img src="./assets/android_dailynewsapp.gif" width=250px>
 </p>
 </div>
 
@@ -50,7 +58,7 @@ So it is best to use a machine generated text. Now this machine generated text c
 - [ ] Improve the existing summarizer. 
 - [ ] Try out Deep Learning based models for summarization.
 - [ ] Integrate twilio for text based messaging. 
-- [ ] Create Android App for the same. 
+- [x] Create Android App for the same. 
 
 ------------------------------------------
 ###             Note
@@ -61,7 +69,7 @@ This project was part of our submission for the subject MIP
 ###             Tech stack
 `Backend` : Python ,Flask , NodeJS , Dialogflow <br>
 `Database` : MongoDB <br>
-`Frontend` : ReactJS , CSS , HTML , Bootstrap <br>
+`Frontend` : ReactJS , CSS , HTML , Bootstrap  <br>
 
 ------------------------------------------
 ### Contributing
