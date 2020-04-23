@@ -87,56 +87,69 @@ def webhook():
 @app.route("/db",methods=['POST','GET'])
 def build_database():
 
-	with open('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv') as csvDataFile:
-		csvReader = csv.reader(csvDataFile)
-		for row in csvReader:
-			li_all.append(row[1])
-			key_name_all.append(row[0])
-			print(key_name_all)
+    # req = urllib.request.Request('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv')
+	# # with open('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv') as csvDataFile:
+    # with urllib.request.urlopen(req) as csvDataFile:
+    url = 'https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv'
+    df = pd.read_csv(url, error_bad_lines=False)
+    # print(df)
+        # csvReader = csv.reader(csvDataFile)
+    li_all = []
+    key_name_all = []
 
-	print("li: ")
-	li=li_all[0:20]
-	li2=key_name_all[0:20]
-	print(li)
-	print()
-	
-	res_data=dict()
-	for url in li:
-		toi=newspaper.build(url,memoize_articles=True,language='en')
-		
-		d=dict()
-		k=0
-		for article in toi.articles:
-			try:
-				article.download() 
-				article.parse() 
-				summary = driver(article.text,2)
-				info=dict()
-				info['url']=article.url
-				info['title']=article.title
-				print('title:::::::::::::'+info['title'])
-				info['text']=summary
-				info['top_image']=article.top_image
 
-				d[k]=info
-				k+=1
-				if k==5:
-					break
-			except Exception as e:
-				print("Entered except block :"+str(e))
-				pass
-		d['length']=k
-		res_data[url]=d
+    li_all = df["http://www.huffingtonpost.com"].values.tolist()
+    key_name_all = df["huffingtonpost"].values.tolist()
 
-		print(url+"   NewArticles : "+str(k))
+    li_all.append("http://www.huffingtonpost.com")
+    key_name_all.append("huffingtonpost")
 
-	result={
-		'success':True,
-		'alldata':res_data,
-		'allsite':li,
-		'allsite_key':li2
-	}
-	return json.dumps(result)
+    # print(li_all)
+    # print(key_name_all)
+
+    # print("li: ")
+    li=li_all
+    li2=key_name_all
+    # print(li)
+    # print()
+
+    res_data=dict()
+    for url in li:
+        toi=newspaper.build(url,memoize_articles=True,language='en')
+        
+        d=dict()
+        k=0
+        for article in toi.articles:
+            try:
+                article.download() 
+                article.parse() 
+                summary = driver(article.text,2)
+                info=dict()
+                info['url']=article.url
+                info['title']=article.title
+                print('title:::::::::::::'+info['title'])
+                info['text']=summary
+                info['top_image']=article.top_image
+
+                d[k]=info
+                k+=1
+                if k==5:
+                    break
+            except Exception as e:
+                print("Entered except block :"+str(e))
+                pass
+        d['length']=k
+        res_data[url]=d
+
+        print(url+"   NewArticles : "+str(k))
+
+    result={
+        'success':True,
+        'alldata':res_data,
+        'allsite':li,
+        'allsite_key':li2
+    }
+    return json.dumps(result)
 
 
 def clean(sentences):
@@ -204,4 +217,4 @@ def driver(article,required_length):
 	return summary
 
 if __name__ == "__main__":
-    app.run(port=PORT)
+    app.run(port=7000)
