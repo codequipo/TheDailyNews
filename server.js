@@ -90,6 +90,7 @@ setInterval(function() {
                
            }
            console.log()
+           console.log('Will be Called after every 2 hours!')
        }
        
      })
@@ -97,7 +98,7 @@ setInterval(function() {
     catch(err){
         console.log('error on server:'+err)
     }
-}, 600000)//10 mins
+}, 7200000)//120 mins
 
 
 
