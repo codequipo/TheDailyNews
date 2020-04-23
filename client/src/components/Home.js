@@ -146,7 +146,7 @@ class Home extends Component {
     }
 
     return (
-      <div className="container">
+      <div className="container mt-3">
         {
           
         this.state.articles.map((data,index)=>{
@@ -170,7 +170,7 @@ class Home extends Component {
                           
                           return(
                             <MDBCol md='4'>
-                              <MDBCard style={{height:"500px",width:"43vh"}}>
+                              <MDBCard style={{height:"500px",width:"43vh",position:"relative"}}>
                                 <MDBCardImage
                                   hover
                                   overlay='white-light'
@@ -180,25 +180,27 @@ class Home extends Component {
                                 />
 
                                 <MDBCardBody cascade className='text-center'>
-                                  <MDBCardTitle className='card-title'>
-                                    <strong>{this.state.articles[k].main_url_key}</strong>
-                                  </MDBCardTitle>
+                                  <div style={{textAlign:"left",maxHeight:"100px",overflowY:"auto"}}>
+                                    <strong>{this.state.articles[k].title}</strong>
+                                  </div>
 
-                                  <p className='font-weight-bold blue-text'><a href={this.state.articles[k].main_url}>Main Link</a></p>
+                                  
 
-                                  <MDBCardText>
-                                  <MDBIcon icon='quote-left' />{this.state.articles[k].title}{' '}<MDBIcon icon='quote-right' />
-                                  </MDBCardText>
+                                  {/* <MDBCardText>
+                                  <MDBIcon icon='quote-left' /><strong>{this.state.articles[k].title}</strong><MDBIcon icon='quote-right' />
+                                  </MDBCardText> */}
 
-                                  <MDBCol md='20' className='d-flex justify-content-center'>
+                                  <div style={{position: "absolute", bottom: "60px"}}>
+                                  <p className='font-weight-bold blue-text'><a href={this.state.articles[k].main_url}>{this.state.articles[k].main_url_key}</a></p>
+
+                                  <MDBCol md='12' className='d-flex justify-content-center'>
                                       <button
                                       
                                         onClick={(e) => {
                                           e.preventDefault();
                                           window.location.href=this.state.articles[k].url;
                                           }}
-                                      
-                                        
+
                                       type="button" class="btn btn-secondary">Article</button>
                                       
                                       <button onClick={this.toggle(k)} type="button" class="btn btn-primary">Summary</button>
@@ -208,6 +210,7 @@ class Home extends Component {
                                   <Button variant="contained"  color="primary" onClick={this.addToBookmark}>
                                     <MDBIcon far icon="bookmark"  id={this.state.articles[k]._id} />
                                   </Button>
+                                  </div>
                                 </MDBCardBody>
 
                                 <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
