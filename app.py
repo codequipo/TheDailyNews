@@ -64,6 +64,7 @@ def webhook():
 		print(len(li))
 		for index,item in enumerate(li):
 			temp = dict()
+			print("print before urllib")
 			req = urllib.request.Request('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/flask_server/format.json')
 			with urllib.request.urlopen(req) as f:
     				temp = json.load(f)
