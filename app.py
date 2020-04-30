@@ -65,10 +65,10 @@ def webhook():
 		for index,item in enumerate(li):
 			temp = dict()
 			
-			req = urllib.request.Request('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/flask_server/format.json')
+			req = urllib.request.Request('https://raw.githubusercontent.com/codequipo/TheDailyNews/flask_deploy/format.json')
 			with urllib.request.urlopen(req) as f:
     				temp = json.load(f)
-			print("print after urllib")
+			
 				
 			temp['card']['buttons'][0]['postback'] = 'Summarize:'+item['unique_id']
 			temp['card']['title'] = item['title']
