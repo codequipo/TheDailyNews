@@ -98,7 +98,7 @@ setInterval(function() {
     catch(err){
         console.log('error on server:'+err)
     }
-}, 7200000)//120 mins
+}, 300000)//5 mins
 
 
 
