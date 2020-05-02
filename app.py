@@ -14,6 +14,7 @@ import newspaper
 import pandas as pd
 import json
 import requests
+import time
 
 url = "https://graph.facebook.com/v2.6/me/messages"
 ngrok_url = 'https://the-daily-news-app.herokuapp.com/api/'
@@ -84,74 +85,80 @@ def webhook():
 
 	return{'fulfillmentText':"Please check your responses again  "}
 
+def getSourceData():
+	url = 'https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv'
+	df = pd.read_csv(url, error_bad_lines=False)
+	url_list = []
+	key_list = []
+	url_list = df["http://www.huffingtonpost.com"].values.tolist()
+	key_list = df["huffingtonpost"].values.tolist()
+	url_list = ["http://www.huffingtonpost.com"] + url_list
+	key_list = ["huffingtonpost"] + key_list
+	return key_list,url_list
 
+key_list, url_list= getSourceData()
 
 @app.route("/db",methods=['POST','GET'])
 def build_database():
+	tic=time.time()
+	# key_list,url_list = getSourceData()
+	json_body=request.get_json(force=True)
+	currCount = int(json_body.get('currCount'))
+	numOfSources = int(json_body.get('numOfSources'))
+	numOfArticlesPerSources = int(json_body.get('numOfArticlesPerSources'))
+	num_of_sentences_in_summary = int(json_body.get('num_of_sentences_in_summary'))
 
-    # req = urllib.request.Request('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv')
-	# # with open('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv') as csvDataFile:
-    # with urllib.request.urlopen(req) as csvDataFile:
-    url = 'https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv'
-    df = pd.read_csv(url, error_bad_lines=False)
-    # print(df)
-        # csvReader = csv.reader(csvDataFile)
-    li_all = []
-    key_name_all = []
+	print('currCount : '+str(currCount))
 
+	
+	response_data=dict()
+	for i in range(currCount,currCount+numOfSources):
+		url=url_list[i]
+		source = newspaper.build( url, memoize_articles=True, language='en')
+		
+		d=dict() # Holds articles from current selected source 
+		k=0
+		
+		for article in source.articles:
+			try:
+				article.download() 
+				article.parse() 
+				summary = driver(article.text,num_of_sentences_in_summary)
+				
+				article_info=dict()
+				article_info['url']=article.url
+				article_info['title']=article.title
+				print('i:'+str(i)+'  k:'+str(k)+'  title  => '+article_info['title'])
+				article_info['text']=summary
+				article_info['top_image']=article.top_image
 
-    li_all = df["http://www.huffingtonpost.com"].values.tolist()
-    key_name_all = df["huffingtonpost"].values.tolist()
+				d[k]=article_info
+				
+				
+				k+=1
+				if k == numOfArticlesPerSources:
+					break
+			except Exception as e:
+				print("Entered except block :"+str(e))
+				pass
+		d['length']=k
+		response_data[url]=d
 
-    li_all.append("http://www.huffingtonpost.com")
-    key_name_all.append("huffingtonpost")
+		print(url+"   NewArticles : "+str(k))
 
-    # print(li_all)
-    # print(key_name_all)
-
-    # print("li: ")
-    li=li_all
-    li2=key_name_all
-    # print(li)
-    # print()
-
-    res_data=dict()
-    for url in li:
-        toi=newspaper.build(url,memoize_articles=True,language='en')
-        
-        d=dict()
-        k=0
-        for article in toi.articles:
-            try:
-                article.download() 
-                article.parse() 
-                summary = driver(article.text,2)
-                info=dict()
-                info['url']=article.url
-                info['title']=article.title
-                print('title:::::::::::::'+info['title'])
-                info['text']=summary
-                info['top_image']=article.top_image
-
-                d[k]=info
-                k+=1
-                if k==5:
-                    break
-            except Exception as e:
-                print("Entered except block :"+str(e))
-                pass
-        d['length']=k
-        res_data[url]=d
-
-        print(url+"   NewArticles : "+str(k))
-
-    result={
-        'success':True,
-        'alldata':res_data,
-        'allsite':li,
-        'allsite_key':li2
-    }
-    return json.dumps(result)
+	result={
+		'success':True,
+		'alldata':response_data,
+		'allsite':url_list[currCount:currCount+numOfSources],
+		'allsite_key':key_list[currCount:currCount+numOfSources]
+	}
+	toc=time.time()
+	diff=toc-tic
+	print("# Time required for function to execute is :"+str(diff)+" # ")
+	print()
+	print()
+	return json.dumps(result)
+	
 
 
 def clean(sentences):
