@@ -47,7 +47,7 @@ So it is best to use a machine generated text. Now this machine generated text c
 
 <h3 align="center"> TheDailyNews App </a></h3>
 <p>
-<h3 align='center'> Download the app here: <a href="https://github.com/codequipo/TheDailyNews/blob/master/Android/app-release.apk" target="_top">Download Link </a></h3>
+<h3 align='center'> Download the app here: <a href="https://github.com/codequipo/TheDailyNews/raw/master/Android/app-release.apk" target="_top">Download Link </a></h3>
 <p align="center">
 <img src="./assets/android_dailynewsapp.gif" width=250px>
 </p>
