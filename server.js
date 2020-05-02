@@ -42,7 +42,7 @@ var config = { headers: {
 
 
 
-let minCount=10;
+let minCount=0;
 let currCount = minCount; // 0-248 and repeat
 let numOfSources=1
 let numOfArticlesPerSources=2
@@ -51,68 +51,74 @@ let num_of_sentences_in_summary=2
 let maxCount=248 - numOfSources;
 
 setInterval(function() {
+    if(process.env.REPEAT=="TRUE"){ //This is added to control sever on-off status 
     
-    console.log('start')
-    try{
-        axios.post(
-            process.env.FLASK_URL+"/db", 
-            { 
-                currCount:currCount%maxCount,
-                numOfSources,
-                numOfArticlesPerSources,
-                num_of_sentences_in_summary
-            },
-            config
-        )
-        
-        .then(async function (response) {
-            console.log('Received response')
-            currCount++
-            const sites=response.data.allsite
-            const sites_key=response.data.allsite_key
-
-            for(var z=0;z<sites.length;z++){
-
+        console.log('start')
+        try{
+            axios.post(
+                process.env.FLASK_URL+"/db", 
+                { 
+                    currCount:currCount%maxCount,
+                    numOfSources,
+                    numOfArticlesPerSources,
+                    num_of_sentences_in_summary
+                },
+                config
+            )
             
-                var limit=response.data.alldata[sites[z]]['length']
-                console.log("z:"+sites[z]+"  limit:"+limit)
+            .then(async function (response) {
+                console.log('Received response')
+                currCount++
+                const sites=response.data.allsite
+                const sites_key=response.data.allsite_key
+
+                for(var z=0;z<sites.length;z++){
 
                 
+                    var limit=response.data.alldata[sites[z]]['length']
+                    console.log("z:"+sites[z]+"  limit:"+limit)
 
-                for(var i=limit-1;i>=0;i--){
-
-                    const documentCount = await Article.countDocuments({});
-                    console.log('documentCount:'+documentCount)   
                     
-                    let article=new Article({
+
+                    for(var i=limit-1;i>=0;i--){
+
+                        const documentCount = await Article.countDocuments({});
+                        console.log('documentCount:'+documentCount)   
                         
-                        main_url:sites[z],
-                        main_url_key:sites_key[z],
-                        url:response.data.alldata[sites[z]][i].url,
-                        
-                        title:response.data.alldata[sites[z]][i].title,
-                        text:response.data.alldata[sites[z]][i].text,
-                        top_image:response.data.alldata[sites[z]][i].top_image,
-                        index:i.toString(),
-                        unique_id:documentCount.toString(),
+                        let article=new Article({
+                            
+                            main_url:sites[z],
+                            main_url_key:sites_key[z],
+                            url:response.data.alldata[sites[z]][i].url,
+                            
+                            title:response.data.alldata[sites[z]][i].title,
+                            text:response.data.alldata[sites[z]][i].text,
+                            top_image:response.data.alldata[sites[z]][i].top_image,
+                            index:i.toString(),
+                            unique_id:documentCount.toString(),
 
-                    })
-                    
-                    
-                    console.log("article.title:"+article.title)
-                    
-                    let resp=await article.save()
-                    
+                        })
+                        
+                        
+                        console.log("article.title:"+article.title)
+                        
+                        let resp=await article.save()
+                        
+                    }
+                    console.log()
+                    console.log('Will be Called after every 3 minutes!')
                 }
-                console.log()
-                console.log('Will be Called after every 3 minutes!')
-            }
-        
-        })
+            
+            })
+        }
+        catch(err){
+            console.log('error on server:'+err)
+        }
     }
-    catch(err){
-        console.log('error on server:'+err)
+    else{
+        console.log('Server is off')
     }
+
 }, 180000)
 
 
