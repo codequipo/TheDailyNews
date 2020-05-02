@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt')
 const User = require('../models/User')
 users.use(cors())
 
-process.env.SECRET_KEY = 'secretkey'
+
 
 users.post('/register', (req, res) => {
     const today = new Date()
@@ -28,24 +28,26 @@ users.post('/register', (req, res) => {
               userData.password = hash
               User.create(userData)
                 .then(user => {
-                  res.json({ status:"success",Data: user.email + 'registered!',message:user.email + 'registered!' })
+                  res.json({ status:"success",Data: user.email + ' registered!',message:user.email + ' registered!' })
                 })
                 .catch(err => {
-                  res.send('error: ' + err)
+                  res.json({ status:"fail",Data: err,message:err })
+                  // res.send('error: ' + err)
                 })
             })
-          } else {
+          }else {
             res.json({ status:"fail",Data: 'User already exists',message:'User already exists' })
           }
         })
         .catch(err => {
-          res.json({ status:"fail",Data: err,message:err })
+          return res.json({ status:"fail",Data: err,message:err })
         })
     })
 
 
 
     users.post('/login', (req, res) => {
+      
         User.findOne({
           email: req.body.email
         })
@@ -59,43 +61,46 @@ users.post('/register', (req, res) => {
                   last_name: user.last_name,
                   email: user.email
                 }
-                let token = jwt.sign(payload, process.env.SECRET_KEY, {
+                let token = jwt.sign(payload, process.env.secretkey || "secretkey", {
                   expiresIn: '1h'
                 })
-                res.json({token:token,message:'Login Successful',status:'success'})
-              } else {
-                // Passwords don't match
-                res.json({ status:"fail",error: 'Password doesnt match',message:'Password doesnt match' })
+                return res.json({token:token,message:'Login Successful',status:'success'})
               }
-            } else {
-              res.json({ status:"fail",error: 'User does not exist',message:'User does not exist' })
+              else {
+                // Passwords don't match
+                return res.json({ status:"fail",error: 'Password doesnt match',message:'Password doesnt match' })
+              }
+            }
+            else {
+              return res.json({ status:"fail",error: 'User does not exist',message:'User does not exist' })
             }
           })
           .catch(err => {
+            
             res.json({ status:"fail",error: err,message:err })
           })
       })
 
-//This route is not actually used in front end.
-//In front end we generate and store the token on the basis of mail,password and secretkey.....so when we decode the token we get the mail,password.....and thus we get all info by decoding token
-users.get('/profile', (req, res) => {
-    //pass it without bearer in this case.....jwt.verify takes token without keyword 'Bearer '
-    console.log(req.headers['authorization'])
-  var decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)
-
-  User.findOne({
-    _id: decoded._id
-  })
-    .then(user => {
-      if (user) {
-        res.json(user)
-      } else {
-        res.send('User does not exist')
+    //Added this for Android
+    users.post('/checktokenvalidAndroid',(req,res,next)=>{
+      
+      var result=""
+      var status=""
+      try{
+        const token=req.headers.authorization.split(" ")[1]
+        result=jwt.verify(token,process.env.secretkey || "secretkey")
+        status="success"
       }
+      catch(err){
+        result=err
+        status="fail"
+      }
+      
+      
+      return res.json({status:status,message:result})
     })
-    .catch(err => {
-      res.send('error: ' + err)
-    })
-})
+
+
+
 
 module.exports = users

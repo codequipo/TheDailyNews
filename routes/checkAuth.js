@@ -1,4 +1,3 @@
- 
 const jwt=require('jsonwebtoken')
 
 
@@ -11,7 +10,9 @@ module.exports=(req,res,next)=>{
     }
     catch(err){
         return res.status(401).json({
-            status:'Auth Failed'
+            status:'fail',
+            message:'auth fail',
+            error:err
         })
     }
     

@@ -42,9 +42,11 @@ class Register extends Component {
       if(res.status=="success"){
         this.props.history.push(`/login`)
       }
-      else{
-        console.log(res.message)
+      else if(res.status=="fail"){
         this.show(res.message)
+      }
+      else{
+        this.props.history.push(`/error`)
       }
       
       
@@ -75,8 +77,7 @@ class Register extends Component {
         <MDBRow>
           <MDBCol md="8" lg="7" className="mx-auto float-none white z-depth-1 py-2 px-2">
             <MDBCardBody>
-              {/* <MDBCardTitle><strong>Welcome</strong></MDBCardTitle> */}
-              {/* <p className="pb-4">Example of Material Design Form</p> */}
+
 
       <form onSubmit={this.onSubmit}>
         <p className="h4 text-center mb-4">Register</p>
@@ -127,7 +128,6 @@ class Register extends Component {
         onChange={this.onChange}
         />
         <div className="text-center mt-4">
-          {/* <MDBBtn color="indigo" type="submit">Login</MDBBtn> */}
           <button
                 type="submit"
                 className="btn btn-lg btn-primary "
@@ -160,65 +160,8 @@ class Register extends Component {
 
 
 
-      // <div className="container">
-      //   <div className="row">
-      //     <div className="col-md-6 mt-5 mx-auto">
-      //       <form noValidate onSubmit={this.onSubmit}>
-      //         <h1 className="h3 mb-3 font-weight-normal">Register</h1>
-      //         <div className="form-group">
-      //           <label htmlFor="name">First name</label>
-      //           <input
-      //             type="text"
-      //             className="form-control"
-                  // name="first_name"
-                  // placeholder="Enter your first name"
-                  // value={this.state.first_name}
-                  // onChange={this.onChange}
-      //           />
-      //         </div>
-      //         <div className="form-group">
-      //           <label htmlFor="name">Last name</label>
-      //           <input
-      //             type="text"
-      //             className="form-control"
-                  // name="last_name"
-                  // placeholder="Enter your lastname name"
-                  // value={this.state.last_name}
-                  // onChange={this.onChange}
-      //           />
-      //         </div>
-      //         <div className="form-group">
-      //           <label htmlFor="email">Email address</label>
-      //           <input
-      //             type="email"
-      //             className="form-control"
-                  // name="email"
-                  // placeholder="Enter email"
-                  // value={this.state.email}
-                  // onChange={this.onChange}
-      //           />
-      //         </div>
-      //         <div className="form-group">
-      //           <label htmlFor="password">Password</label>
-      //           <input
-      //             type="password"
-      //             className="form-control"
-                  // name="password"
-                  // placeholder="Password"
-                  // value={this.state.password}
-                  // onChange={this.onChange}
-      //           />
-      //         </div>
-              // <button
-              //   type="submit"
-              //   className="btn btn-lg btn-primary btn-block"
-              // >
-              //   Register!
-              // </button>
-      //       </form>
-      //     </div>
-      //   </div>
-      // </div>
+      
+      
     )
   }
 }

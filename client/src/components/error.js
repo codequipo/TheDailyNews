@@ -1,11 +1,6 @@
 // https://cdn.dribbble.com/users/761395/screenshots/6287961/error_401.jpg
-
 import React, { Component } from 'react'
 import './common.css'
-
-
-
-
 
 
 class Error extends Component {

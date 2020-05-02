@@ -1,5 +1,7 @@
 import json
 import numpy as np 
+import urllib
+from urllib.request import urlopen
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import sent_tokenize,word_tokenize
@@ -12,11 +14,12 @@ import newspaper
 import pandas as pd
 import json
 import requests
+import time
 
 url = "https://graph.facebook.com/v2.6/me/messages"
-ngrok_url = 'https://07d39d1e.ngrok.io/api/'
+ngrok_url = 'https://the-daily-news-app.herokuapp.com/api/'
 
-source_csv = pd.read_csv('sites.csv')
+source_csv = pd.read_csv('https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv')
 
 app = Flask(__name__)
 CORS(app)
@@ -51,6 +54,7 @@ def webhook():
 
 	if req.get('queryResult').get('intent').get('displayName') == 'source_intent':
 		source_name = req.get('queryResult').get('queryText')[7:]
+		source_csv.columns = ['name','link']
 		source_link = source_csv['link'][source_csv.loc[source_csv['name']==source_name].index[0]]
 		news_url = ngrok_url + 'getnewsbysources'
 		data1 = {'main_urls':source_link }
@@ -61,9 +65,12 @@ def webhook():
 		print(len(li))
 		for index,item in enumerate(li):
 			temp = dict()
-			with open('format.json','r') as f:
-				temp = json.load(f)
-
+			
+			req = urllib.request.Request('https://raw.githubusercontent.com/codequipo/TheDailyNews/flask_deploy/format.json')
+			with urllib.request.urlopen(req) as f:
+    				temp = json.load(f)
+			
+				
 			temp['card']['buttons'][0]['postback'] = 'Summarize:'+item['unique_id']
 			temp['card']['title'] = item['title']
 			temp['card']['imageUri'] = item['top_image']
@@ -78,61 +85,80 @@ def webhook():
 
 	return{'fulfillmentText':"Please check your responses again  "}
 
+def getSourceData():
+	url = 'https://raw.githubusercontent.com/codequipo/TheDailyNews/deploy/sites.csv'
+	df = pd.read_csv(url, error_bad_lines=False)
+	url_list = []
+	key_list = []
+	url_list = df["http://www.huffingtonpost.com"].values.tolist()
+	key_list = df["huffingtonpost"].values.tolist()
+	url_list = ["http://www.huffingtonpost.com"] + url_list
+	key_list = ["huffingtonpost"] + key_list
+	return key_list,url_list
 
+key_list, url_list= getSourceData()
 
 @app.route("/db",methods=['POST','GET'])
 def build_database():
+	tic=time.time()
+	# key_list,url_list = getSourceData()
+	json_body=request.get_json(force=True)
+	currCount = int(json_body.get('currCount'))
+	numOfSources = int(json_body.get('numOfSources'))
+	numOfArticlesPerSources = int(json_body.get('numOfArticlesPerSources'))
+	num_of_sentences_in_summary = int(json_body.get('num_of_sentences_in_summary'))
 
-	with open('sites.csv') as csvDataFile:
-		csvReader = csv.reader(csvDataFile)
-		for row in csvReader:
-			li_all.append(row[1])
-			key_name_all.append(row[0])
-			print(key_name_all)
+	print('currCount : '+str(currCount))
 
-	print("li: ")
-	li=li_all[0:20]
-	li2=key_name_all[0:20]
-	print(li)
-	print()
 	
-	res_data=dict()
-	for url in li:
-		toi=newspaper.build(url,memoize_articles=True,language='en')
+	response_data=dict()
+	for i in range(currCount,currCount+numOfSources):
+		url=url_list[i]
+		source = newspaper.build( url, memoize_articles=True, language='en')
 		
-		d=dict()
+		d=dict() # Holds articles from current selected source 
 		k=0
-		for article in toi.articles:
+		
+		for article in source.articles:
 			try:
 				article.download() 
 				article.parse() 
-				summary = driver(article.text,2)
-				info=dict()
-				info['url']=article.url
-				info['title']=article.title
-				print('title:::::::::::::'+info['title'])
-				info['text']=summary
-				info['top_image']=article.top_image
+				summary = driver(article.text,num_of_sentences_in_summary)
+				
+				article_info=dict()
+				article_info['url']=article.url
+				article_info['title']=article.title
+				print('i:'+str(i)+'  k:'+str(k)+'  title  => '+article_info['title'])
+				article_info['text']=summary
+				article_info['top_image']=article.top_image
 
-				d[k]=info
+				d[k]=article_info
+				
+				
 				k+=1
-				if k==5:
+				if k == numOfArticlesPerSources:
 					break
 			except Exception as e:
 				print("Entered except block :"+str(e))
 				pass
 		d['length']=k
-		res_data[url]=d
+		response_data[url]=d
 
 		print(url+"   NewArticles : "+str(k))
 
 	result={
 		'success':True,
-		'alldata':res_data,
-		'allsite':li,
-		'allsite_key':li2
+		'alldata':response_data,
+		'allsite':url_list[currCount:currCount+numOfSources],
+		'allsite_key':key_list[currCount:currCount+numOfSources]
 	}
+	toc=time.time()
+	diff=toc-tic
+	print("# Time required for function to execute is :"+str(diff)+" # ")
+	print()
+	print()
 	return json.dumps(result)
+	
 
 
 def clean(sentences):

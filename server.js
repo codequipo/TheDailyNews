@@ -17,11 +17,11 @@ require('dotenv').config()
 const path = require("path")
 
 // ... other app.use middleware 
-//app.use(express.static(path.join(__dirname, "frontend", "build")))
+app.use(express.static(path.join(__dirname, "client", "build")))
 
 
 var port = process.env.PORT
-// console.log('process.env.PORT '+process.env.PORT)
+
 
 
 app.use(bodyParser.json())
@@ -42,160 +42,84 @@ var config = { headers: {
 
 
 
-//Just called in beginning to not waste time
-// console.log('start')
-//     axios.post("http://0.0.0.0:8087/", 
-//              { label : "Test" , language : "en"}  , config
-//           )
-//           .then(async function (response) {
-//             // console.log(response.data.alldata);
-//             // const sites=['http://cnn.com','http://www.time.com','http://www.bbc.co.uk']
-//             const sites=response.data.allsite
-//             const sites_key=response.data.allsite_key
-//             for(var z=0;z<sites.length;z++){
+let minCount=0;
+let currCount = minCount; // 0-248 and repeat
+let numOfSources=1
+let numOfArticlesPerSources=2
+let num_of_sentences_in_summary=2
 
-//                 // var max_articles_by_one_source=2
-//                 var limit=response.data.alldata[sites[z]]['length']
-//                 // console.log("response.data.alldata[sites[z]]['length'] : "+limit)
-//                 // if(response.data.alldata[sites[z]]['length']>2){
-//                 //     limit=2
-//                 //     console.log("final limit  : "+limit)
-//                 // }
-//                 console.log("z:"+sites[z]+"  limit:"+limit)
-
-                
-
-//                 for(var i=limit-1;i>=0;i--){
-                    
-                     
-                    
-                    
-                    
-
-//                     const documentCount = await Article.countDocuments({});
-//                     console.log('documentCount:'+documentCount)   
-                    
-//                     let article=new Article({
-                        
-//                         main_url:sites[z],
-//                         main_url_key:sites_key[z],
-//                         url:response.data.alldata[sites[z]][i].url,
-                        
-//                         title:response.data.alldata[sites[z]][i].title,
-//                         text:response.data.alldata[sites[z]][i].text,
-//                         top_image:response.data.alldata[sites[z]][i].top_image,
-//                         index:i.toString(),
-//                         unique_id:documentCount.toString(),
-
-//                     })
-                    
-                    
-//                     console.log("article.title:"+article.title)
-
-                    
-                    
-                    
-                    
-                    
-//                     let resp=await article.save()
-                    
-//                 }
-//                 console.log()
-//             }
-            
-//           })
-//           .catch(function (error) {
-//             console.log(error);
-//           })
-//end here extra
-
-// axios.post('http://0.0.0.0:8087/li_all_dict',{},config)
-// .then(async (result)=>{
-//     let respo=result.data
-//     // console.log(result.data)
-//     for(var i=0;i<respo.length;i++){
-//         let source=new Source({
-//             index:respo[i].index,
-//             url:respo[i].url,
-//             unique_id:respo[i].unique_id
-//         })
-//         console.log(source.index)
-//         await source.save()
-//     }
-// })
-
+let maxCount=248 - numOfSources;
 
 setInterval(function() {
-    console.log('start')
-    try{
-        axios.post("http://0.0.0.0:8087/", 
-        { label : "Test" , language : "en"}  , config
-     )
-     .then(async function (response) {
-       // console.log(response.data.alldata);
-       // const sites=['http://cnn.com','http://www.time.com','http://www.bbc.co.uk']
-       const sites=response.data.allsite
-       const sites_key=response.data.allsite_key
-       for(var z=0;z<sites.length;z++){
+    if(process.env.REPEAT=="TRUE"){ //This is added to control sever on-off status 
+    
+        console.log('start')
+        try{
+            axios.post(
+                process.env.FLASK_URL+"/db", 
+                { 
+                    currCount:currCount%maxCount,
+                    numOfSources,
+                    numOfArticlesPerSources,
+                    num_of_sentences_in_summary
+                },
+                config
+            )
+            
+            .then(async function (response) {
+                console.log('Received response')
+                currCount++
+                const sites=response.data.allsite
+                const sites_key=response.data.allsite_key
 
-           // var max_articles_by_one_source=2
-           var limit=response.data.alldata[sites[z]]['length']
-           // console.log("response.data.alldata[sites[z]]['length'] : "+limit)
-           // if(response.data.alldata[sites[z]]['length']>2){
-           //     limit=2
-           //     console.log("final limit  : "+limit)
-           // }
-           console.log("z:"+sites[z]+"  limit:"+limit)
+                for(var z=0;z<sites.length;z++){
 
-           
-
-           for(var i=limit-1;i>=0;i--){
-               
                 
-               
-               
-               
+                    var limit=response.data.alldata[sites[z]]['length']
+                    console.log("z:"+sites[z]+"  limit:"+limit)
 
-               const documentCount = await Article.countDocuments({});
-               console.log('documentCount:'+documentCount)   
-               
-               let article=new Article({
-                   
-                   main_url:sites[z],
-                   main_url_key:sites_key[z],
-                   url:response.data.alldata[sites[z]][i].url,
-                   
-                   title:response.data.alldata[sites[z]][i].title,
-                   text:response.data.alldata[sites[z]][i].text,
-                   top_image:response.data.alldata[sites[z]][i].top_image,
-                   index:i.toString(),
-                   unique_id:documentCount.toString(),
+                    
 
-               })
-               
-               
-               console.log("article.title:"+article.title)
+                    for(var i=limit-1;i>=0;i--){
 
-               
-               
-               
-               
-               
-               let resp=await article.save()
-               
-           }
-           console.log()
-       }
-       
-     })
-     .catch(function (error) {
-       console.log(error);
-     })
+                        const documentCount = await Article.countDocuments({});
+                        console.log('documentCount:'+documentCount)   
+                        
+                        let article=new Article({
+                            
+                            main_url:sites[z],
+                            main_url_key:sites_key[z],
+                            url:response.data.alldata[sites[z]][i].url,
+                            
+                            title:response.data.alldata[sites[z]][i].title,
+                            text:response.data.alldata[sites[z]][i].text,
+                            top_image:response.data.alldata[sites[z]][i].top_image,
+                            index:i.toString(),
+                            unique_id:documentCount.toString(),
+
+                        })
+                        
+                        
+                        console.log("article.title:"+article.title)
+                        
+                        let resp=await article.save()
+                        
+                    }
+                    console.log()
+                    console.log('Will be Called after every 3 minutes!')
+                }
+            
+            })
         }
         catch(err){
             console.log('error on server:'+err)
         }
-}, 600000)//10 mins
+    }
+    else{
+        console.log('Server is off')
+    }
+
+}, 180000)
 
 
 
@@ -208,9 +132,9 @@ mongoose.connect('mongodb+srv://'+process.env.MONGO_USERNAME+':'+process.env.MON
 
 
 //Right before your app.listen(), add this:
-// app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, "frontend", "build", "index.html"));
-// });
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 app.listen(port, function() {
     console.log('Server is running on port: ' + process.env.PORT)

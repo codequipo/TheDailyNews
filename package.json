@@ -4,6 +4,8 @@
   "description": "",
   "main": "time.js",
   "scripts": {
+    "start": "node server.js",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -20,5 +22,8 @@
     "mongoose": "^5.9.9",
     "mongoose-auto-increment": "^5.0.1",
     "request": "^2.88.2"
+  },
+  "engines": {
+    "node": "12.16.1"
   }
 }
