@@ -76,6 +76,49 @@ This project was part of our submission for the subject MIP
 `Android` : Java <br>
 
 ------------------------------------------
+### Installing
+
+A step by step series of examples that tell you how to get a development env running
+
+In your cmd:
+
+```
+git clone https://github.com/codequipo/TheDailyNews.git
+```
+
+Then,
+
+```
+cd TheDailyNews/flask_server
+pip install -r requirements.txt
+python app.py
+```
+
+Next
+
+```
+cd ../TheDailyNews/Web
+npm i
+```
+Open .env file, enter your credentials for following fields
+
+```
+MONGO_USERNAME=ENTER YOUR MONGODB DATABASE USER NAME
+MONGO_PASSWORD=ENTER YOUR MONGODB DATABASE USER PASSWORD
+MONGO_DB_NAME=ENTER YOUR MONGODB DATABASE NAME
+```
+Then
+
+```
+npm start
+cd client
+npm i
+npm start
+```
+
+You are done with the setup now!
+
+------------------------------------------
 ### Contributing
 
 
