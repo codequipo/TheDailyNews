@@ -39,21 +39,42 @@ var config = { headers: {
     'Access-Control-Allow-Origin': '*'}
 }
 
+// Run this code only once
+// const Counter=require('./models/Counter')
+// let c=new Counter({
+//     currCount:0
+// })
+// c.save().then(()=> console.log('Created Count Successfully'))
 
 
 
-let minCount=0;
-let currCount = minCount; // 0-248 and repeat
+// let minCount=0;
+// let currCount = minCount; // 0-248 and repeat
 let numOfSources=1
 let numOfArticlesPerSources=2
 let num_of_sentences_in_summary=2
 
 let maxCount=248 - numOfSources;
 
-setInterval(function() {
+setInterval(async function() {
     if(process.env.REPEAT=="TRUE"){ //This is added to control sever on-off status 
-    
-        console.log('start')
+        let currCount=0
+        try{
+            let countdata=await axios.post('https://the-daily-news-app.herokuapp.com/api/getCounterAndIncrement',{},config)
+        
+            if(countdata.data.status == "success"){
+                currCount = +countdata.data.currCount
+                currCount = currCount % maxCount
+                console.log('start    currCount:'+currCount.toString())
+            }
+            else{
+                console.log('start  FAILED...using default value 0....currCount:'+currCount.toString())
+            }
+            
+        }
+        catch(err){
+            console.log(err)
+        }
         try{
             axios.post(
                 process.env.FLASK_URL+"/db", 
@@ -68,7 +89,8 @@ setInterval(function() {
             
             .then(async function (response) {
                 console.log('Received response')
-                currCount++
+                // currCount++
+                
                 const sites=response.data.allsite
                 const sites_key=response.data.allsite_key
 
@@ -120,6 +142,7 @@ setInterval(function() {
     }
 
 }, 180000)
+
 
 
 

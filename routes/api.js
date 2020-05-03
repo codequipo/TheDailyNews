@@ -5,6 +5,7 @@ route.use(cors())
 const axios=require('axios')
 const Article=require('../models/article')
 const Source=require('../models/source')
+const Counter=require('../models/Counter')
 const checkAuth=require('./checkAuth')
 
 var config = { headers: {  
@@ -221,6 +222,31 @@ route.post('/suscribe',checkAuth,async (req, res) => {
       return res.json({status:'fail',Data:err,message:""})
     }
       
+  })
+
+  
+
+  route.post('/getCounterAndIncrement',async (req, res) => {
+    try{
+      
+      const counter=await Counter.findById('5eaefb1d36eb946774547104')
+      counter.currCount = counter.currCount+ 1
+
+      counter.save()
+      .then(()=>{
+        return res.json({status:'success',currCount:counter.currCount})
+      })
+      
+      
+    }
+    catch(err){
+      return res.json({status:'fail',Data:err,message:""})
+    }
+      
+  })
+
+  route.get('/helloworld',async (req, res) => {
+    return res.json({status:'success',message:"Hello World"})
   })
 
   route.post('/allsources',async (req,res,next)=>{
