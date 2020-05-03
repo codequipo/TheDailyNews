@@ -11,8 +11,7 @@
 [![](https://img.shields.io/badge/Database-MongoDB-red?style=for-the-badge&logo=mongodb)](mongodb.com "MongoDB")
 [![](https://img.shields.io/badge/Made_with-ReactJS-yellow?style=for-the-badge&logo=react)](https://reactjs.org/docs/getting-started.html)
 [![](https://img.shields.io/badge/Made_with-NodeJS-yellow?style=for-the-badge&logo=nodejs)](https://nodejs.org/en/)
-
-&ensp;[![](https://img.shields.io/badge/Made_with-nltk-green?style=for-the-badge&logo=nltk)](https://www.nltk.org/)
+&emsp;[![](https://img.shields.io/badge/Made_with-nltk-green?style=for-the-badge&logo=nltk)](https://www.nltk.org/)
 [![](https://img.shields.io/badge/Made_with-numpy-green?style=for-the-badge&logo=numpy)](https://numpy.org/doc/)
 [![](https://img.shields.io/badge/Made_with-dialogflow-purple?style=for-the-badge&logo=dialogflow)](https://dialogflow.com/)
 [![](https://img.shields.io/badge/Deployment-Android_Studio-purple?style=for-the-badge&logo=java)](https://developer.android.com/studio)
