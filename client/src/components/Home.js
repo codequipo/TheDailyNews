@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import { BrowserRouter as Router, Route,Switch,Redirect } from 'react-router-dom'
 import { MDBContainer,MDBModalFooter,MDBModalBody,MDBModalHeader,MDBModal,MDBRow,MDBIcon,MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
 import ReactSnackBar from "react-js-snackbar";
+import Pagination from './Pagination'
 //Detect changes
 class Home extends Component {
   constructor() {
@@ -20,11 +21,14 @@ class Home extends Component {
       Show: false,
       Showing: false,
       message:'Hello There',
-      zero:false
+      zero:false,
+      currPageNum:1,
+      totalPages:0
     }
 
     this.onChange = this.onChange.bind(this)
     this.addToBookmark = this.addToBookmark.bind(this)
+    this.setCurrPageNumber=this.setCurrPageNumber.bind(this)
   }
 
   toggle = k => () => {
@@ -78,9 +82,12 @@ class Home extends Component {
                 zero:true
               })
             }
+            let totalPages = Math.ceil(res.articles.length/9)
+            console.log("totalPages : "+totalPages)
             this.setState({
               articles:res.articles,
-              page_url:page_url
+              page_url:page_url,
+              totalPages:totalPages
             })
         }
         else{
@@ -95,10 +102,13 @@ class Home extends Component {
         
         if(res.status=="success"){
             console.log(res.articles)
-          this.setState({
+            let totalPages = Math.ceil(res.articles.length/9)          
+            this.setState({
               articles:res.articles,
-              page_url:page_url
+              page_url:page_url,
+              totalPages:totalPages
           })
+          
         }
         else{
           this.props.history.push(`/error`)
@@ -131,9 +141,27 @@ class Home extends Component {
     }
     
   }
+
+  setCurrPageNumber(n){
+    console.log('setCurrPageNumber called '+n)
+    
+    //n =1  0-8
+    //n =2  9-17
+    //(n-1)*9   to  (n-1)*9 +8
+    let iterateRange1=[]
+    for(var i=(n-1)*9;i<=(n-1)*9+8;i++){
+      if(i<this.state.articles.length) iterateRange1.push(i)
+    }
+    
+    this.setState({
+      currPageNum:n
+    })
+
+  }
   
 
   render() {
+    
     if (!localStorage.usertoken || localStorage.usertoken=="undefined"){
       return <Redirect
                 to="/error"
@@ -145,11 +173,24 @@ class Home extends Component {
       )
     }
 
+    let start=(this.state.currPageNum-1)*9;
+    let end=(this.state.currPageNum-1)*9+8;
+    let iterateRangeRender=[]
+    for(var i=start;i<=end;i++){
+      if(i<this.state.articles.length) iterateRangeRender.push(i)
+    }
+    console.log('Render called' +iterateRangeRender)
     return (
       <div className="container mt-3">
         {
           
-        this.state.articles.map((data,index)=>{
+        // this.state.articles.map((data,index)=>{
+          
+          iterateRangeRender.map((data,index)=>{
+            index = data
+          
+          console.log("data"+data)
+          
           
             if(index%3==0){
               console.log("mode3: "+index)
@@ -230,9 +271,10 @@ class Home extends Component {
 
                       </MDBRow>
 
+                      
                     </MDBContainer>
 
-
+                    
 
 
 
@@ -243,6 +285,7 @@ class Home extends Component {
 
 
         })}
+        <Pagination totalPages={this.state.totalPages} currPageNum={this.state.currPageNum} setCurrPageNumber={this.setCurrPageNumber}/>
 
 
       <MDBModal isOpen={this.state.modal13} toggle={this.toggle(0)}>
