@@ -38,7 +38,7 @@ So it is best to use a machine generated text. Now this machine generated text c
 <h3 align="center"> TheDailyNews Bot   </a></h3>
 <br>
 <p>
-<h3 align='center'> Check the bot in action over here: <a href="https://www.facebook.com/DailyNews-383636995052537/?ref=bookmarks" target="_top">DailyNews Bot</a>  </h3>
+<h3 align='center'> Check the bot in action over here: <a href="https://www.facebook.com/DailyNews-383636995052537/?ref=bookmarks" target="_top">DailyNews Bot</a>  (Deprecated)</h3>
 </p>
 <p align="center"> 
 <img src="./assets/chatbot_gif1.gif" width=245px>
@@ -59,7 +59,7 @@ So it is best to use a machine generated text. Now this machine generated text c
 ### To-do List
 
 - [ ] Improve the existing summarizer. 
-- [ ] Try out Deep Learning based models for summarization.
+- [X] Try out Deep Learning based models for summarization.
 - [ ] Integrate twilio for text based messaging. 
 - [x] Create Android App for the same. 
 
