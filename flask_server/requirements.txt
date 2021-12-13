@@ -12,7 +12,7 @@ itsdangerous==1.1.0
 jieba3k==0.35.1
 Jinja2==2.11.2
 joblib==0.14.1
-lxml==4.5.0
+lxml==4.6.5
 MarkupSafe==1.1.1
 newspaper3k==0.2.8
 nltk==3.5
